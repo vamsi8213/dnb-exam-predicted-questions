@@ -1,239 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DNB General Medicine — Complete Question Bank</title>
+<style>
+  :root {
+    --primary:   #1a365d;
+    --secondary: #2b6cb0;
+    --accent:    #e53e3e;
+    --bg:        #f7fafc;
+    --card-bg:   #ffffff;
+    --text:      #2d3748;
+    --border:    #e2e8f0;
+    --muted:     #718096;
+    --switch-h:  56px;
+  }
 
-<h2 class="sr-only">DNB General Medicine Question Bank – 3 sets of predicted 40 questions </h2>
-<style>  
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font-sans)}
-.wrap{padding:1rem 0}
-.header{margin-bottom:1.5rem}
-.header h1{font-size:20px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
-.header p{font-size:13px;color:var(--color-text-secondary)}
-.tabs{display:flex;gap:6px;margin-bottom:1.25rem;flex-wrap:wrap}
-.tab{padding:6px 16px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:13px;cursor:pointer;background:var(--color-background-primary);color:var(--color-text-secondary);transition:all .15s}
-.tab.active{background:var(--color-background-info);color:var(--color-text-info);border-color:transparent;font-weight:500}
-.meta{display:flex;gap:12px;margin-bottom:1rem;flex-wrap:wrap}
-.badge{font-size:12px;padding:3px 10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary)}
-.badge.info{background:var(--color-background-info);color:var(--color-text-info);border-color:transparent}
-.qlist{display:flex;flex-direction:column;gap:10px}
-.qcard{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;cursor:pointer;transition:border-color .15s}
-.qcard:hover{border-color:var(--color-border-secondary)}
-.qcard.expanded{border-color:var(--color-border-info)}
-.qnum{font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
-.qtopic{font-size:13px;font-weight:500;color:var(--color-text-secondary);margin-bottom:6px}
-.qtext{font-size:15px;color:var(--color-text-primary);line-height:1.55}
-.qsub{font-size:13px;color:var(--color-text-secondary);line-height:1.5;margin-top:8px;padding-top:8px;border-top:0.5px solid var(--color-border-tertiary);display:none}
-.qcard.expanded .qsub{display:block}
-.qsource{font-size:11px;color:var(--color-text-tertiary);margin-top:8px}
-.chevron{float:right;font-size:14px;color:var(--color-text-tertiary);transition:transform .2s}
-.qcard.expanded .chevron{transform:rotate(180deg)}
-.progress{display:flex;align-items:center;gap:10px;margin-bottom:1rem}
-.pbar{flex:1;height:4px;background:var(--color-background-secondary);border-radius:2px;overflow:hidden}
-.pfill{height:100%;background:#378ADD;border-radius:2px;transition:width .3s}
-.ptext{font-size:12px;color:var(--color-text-secondary);white-space:nowrap}
-.tip{font-size:12px;color:var(--color-text-tertiary);margin-bottom:1.25rem;padding:8px 12px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);border-left:3px solid #378ADD}
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+  body { background: var(--bg); color: var(--text); line-height: 1.6; }
+
+  /* ---- TOP SWITCHER ---- */
+  .switcher {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+    height: var(--switch-h);
+    background: #ffffff;
+    border-bottom: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .sw-btn {
+    padding: 9px 28px;
+    font-size: 13px; font-weight: 600;
+    border-radius: 6px; border: 2px solid var(--border);
+    background: #edf2f7; color: #4a5568;
+    cursor: pointer; transition: all .2s;
+  }
+  .sw-btn:hover { background: #e2e8f0; }
+  .sw-btn.active {
+    background: var(--secondary); color: #fff;
+    border-color: var(--secondary);
+    box-shadow: 0 4px 10px rgba(43,108,176,.25);
+  }
+
+  /* ---- SHARED SECTION WRAPPER ---- */
+  .section { display: none; padding-top: var(--switch-h); min-height: 100vh; }
+  .section.active { display: block; }
+
+  /* ---- HEADER (both sections share this) ---- */
+  .page-header {
+    background: linear-gradient(135deg, var(--primary) 0%, #2a4365 100%);
+    color: white; padding: 40px 20px; text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+  .page-header h1 { font-size: 2rem; margin-bottom: 10px; font-weight: 700; }
+  .page-header p  { font-size: 1rem; opacity: .9; max-width: 800px; margin: 0 auto; }
+
+  /* ---- CONTAINER ---- */
+  .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+
+  /* ---- TABS (section 2) ---- */
+  .tabs-nav {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    margin-bottom: 25px;
+    border-bottom: 2px solid var(--border); padding-bottom: 10px;
+  }
+  .tab-btn {
+    background: #edf2f7; border: none; color: #4a5568;
+    padding: 11px 22px; font-size: .95rem; font-weight: 600;
+    border-radius: 6px; cursor: pointer; transition: all .25s;
+  }
+  .tab-btn:hover { background: #e2e8f0; }
+  .tab-btn.active { background: var(--secondary); color: #fff; box-shadow: 0 4px 6px rgba(43,108,176,.2); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; animation: fadeIn .35s ease; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+  /* ---- PAPER INFO BAND ---- */
+  .paper-info {
+    background: #ebf8ff; border-left: 4px solid var(--secondary);
+    color: #2b6cb0; padding: 14px; border-radius: 4px;
+    margin-bottom: 22px; font-weight: 500; font-size: .95rem;
+  }
+
+  /* ---- QUESTION CARD (shared by both sections) ---- */
+  .question-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 20px; margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0,0,0,.03);
+    transition: transform .2s, box-shadow .2s;
+    display: flex; align-items: flex-start; gap: 14px;
+  }
+  .question-card:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,.07); border-color: #cbd5e0; }
+
+  .tracker-checkbox { width: 20px; height: 20px; margin-top: 5px; cursor: pointer; accent-color: var(--secondary); flex-shrink: 0; }
+
+  .question-body { flex-grow: 1; }
+  .question-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 11px; flex-wrap: wrap; gap: 8px; }
+  .question-number { font-weight: 700; color: var(--primary); font-size: 1.05rem; }
+  .marks-badge { background: #feebcb; color: #c05621; padding: 4px 10px; border-radius: 20px; font-size: .82rem; font-weight: 600; }
+  .sub-question { margin-top: 10px; padding-left: 14px; border-left: 2px dashed #cbd5e0; }
+  .sub-item { margin-bottom: 8px; font-size: .95rem; }
+  .sub-item:last-child { margin-bottom: 0; }
+  .marks-split { font-weight: 600; color: var(--muted); font-size: .88rem; }
+
+  .question-card.completed { opacity: .65; background: #f7fafc; }
+  .question-card.completed .question-number,
+  .question-card.completed .sub-item,
+  .question-card.completed p { text-decoration: line-through; }
+
+  /* ---- SECTION 1 EXTRAS (gap analysis) ---- */
+  .hero-band { background: #fff; border-bottom: 1px solid var(--border); padding: 24px 20px; }
+  .hero-inner { max-width: 860px; margin: 0 auto; }
+  .hero-label { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+  .hero-inner h2 { font-size: clamp(18px,3vw,26px); font-weight: 700; color: var(--primary); margin-bottom: 6px; }
+  .hero-inner p  { font-size: 13.5px; color: var(--muted); max-width: 580px; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
+  .chip { font-size: 11px; padding: 4px 11px; border-radius: 20px; border: 1px solid var(--border); color: var(--muted); background: #f7fafc; }
+  .chip.hot { background: #fff5f5; border-color: #fed7d7; color: #c53030; }
+
+  .alert-bar { max-width: 900px; margin: 18px auto 0; padding: 0 20px; }
+  .alert-inner { background: #ebf8ff; border: 1px solid #bee3f8; border-left: 3px solid var(--secondary); border-radius: 7px; padding: 12px 14px; font-size: 13px; color: #2c5282; }
+
+  .progress-strip { max-width: 900px; margin: 16px auto 0; padding: 0 20px; display: flex; align-items: center; gap: 12px; }
+  .pbar { flex:1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .pfill { height: 100%; background: var(--secondary); border-radius: 2px; transition: width .4s; width: 0%; }
+  .ptext { font-size: 12px; color: var(--muted); white-space: nowrap; }
+
+  .filter-row { max-width: 900px; margin: 14px auto 0; padding: 0 20px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .fbtn {
+    padding: 5px 13px; border: 1px solid var(--border); border-radius: 6px;
+    font-size: 12px; cursor: pointer; background: #fff; color: var(--muted);
+    transition: all .15s; font-family: inherit;
+  }
+  .fbtn:hover { background: #edf2f7; color: var(--text); }
+  .fbtn.active { background: var(--secondary); border-color: var(--secondary); color: #fff; }
+
+  .qlist { max-width: 900px; margin: 16px auto 0; padding: 0 20px 4rem; display: flex; flex-direction: column; gap: 10px; }
+
+  /* gap-analysis card is slightly different — expandable, no checkbox */
+  .qcard {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px 18px; cursor: pointer;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .qcard:hover { border-color: #a0b8d4; box-shadow: 0 3px 10px rgba(0,0,0,.06); }
+  .qcard.open  { border-color: var(--secondary); box-shadow: 0 4px 14px rgba(43,108,176,.1); }
+
+  .qcard-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .qcard-left { flex:1; min-width: 0; }
+  .qmeta { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+  .qnum  { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: .06em; }
+  .qtag  { font-size: 10px; padding: 2px 9px; border-radius: 12px; font-weight: 600; }
+  .qhot  { font-size: 10px; padding: 2px 9px; border-radius: 12px; font-weight: 600; background: #fff5f5; color: #c53030; border: 1px solid #fed7d7; }
+  .qtext { font-size: 14.5px; color: var(--text); line-height: 1.55; }
+  .chev  { font-size: 18px; color: var(--muted); flex-shrink:0; margin-top:2px; transition: transform .2s; user-select:none; }
+  .qcard.open .chev { transform: rotate(180deg); }
+
+  .qbody { display:none; margin-top:12px; padding-top:12px; border-top:1px solid var(--border); }
+  .qcard.open .qbody { display: block; }
+  .qsub { font-size: 13px; color: var(--muted); line-height: 1.7; white-space: pre-wrap; margin-bottom: 10px; }
+  .qwhy {
+    background: #f7fafc; border: 1px solid var(--border); border-left: 3px solid var(--secondary);
+    border-radius: 6px; padding: 9px 12px; font-size: 12px; color: #4a5568; line-height: 1.6;
+    display: flex; gap: 7px; align-items: flex-start;
+  }
+  .qwhy-icon { flex-shrink:0; font-size: 13px; color: var(--secondary); margin-top: 1px; }
+
+  /* ---- SHARED FOOTER ---- */
+  .page-footer { border-top: 1px solid var(--border); padding: 20px; text-align: center; font-size: 12px; color: var(--muted); margin-top: 20px; }
+
+  @media (max-width: 700px) {
+    .tabs-nav { flex-direction: column; }
+    .tab-btn  { width: 100%; text-align: center; }
+    .page-header h1 { font-size: 1.5rem; }
+    .sw-btn { padding: 8px 14px; font-size: 12px; }
+  }
 </style>
-<div class="wrap">
-<div class="header">
-  <h1>DNB General Medicine — Exam Question Bank</h1>
-  <p>3 sets × 40 questions | 3 sets predicted ques  | Click any question to get the drop down </p>
+</head>
+<body>
+
+<!-- TOP SWITCHER -->
+<div class="switcher">
+  <button class="sw-btn active" id="btn-s1" onclick="switchSection('s1')">🔍 Set 4 · Gap Analysis (40 Q)</button>
+  <button class="sw-btn"        id="btn-s3" onclick="switchSection('s3')">🎯 Set 3 · Pattern Predictions (40 Q)</button>
+  <button class="sw-btn"        id="btn-s2" onclick="switchSection('s2')">📘 Structured Bank · Papers I–IV (40 Q)</button>
 </div>
 
-<div class="tip"><i class="ti ti-bulb" aria-hidden="true" style="font-size:14px;vertical-align:-2px;margin-right:6px"></i>Tap a question to reveal its sub-parts and source paper. Track how many you've reviewed with the progress bar.</div>
+<!-- ============================================================
+     SECTION 1 : Gap Analysis (formerly dark index.html)
+     ============================================================ -->
+<div id="s1" class="section active">
 
-<div class="tabs">
-  <div class="tab active" onclick="switchSet(0)">Set 1 — Physiology & Core Medicine</div>
-  <div class="tab" onclick="switchSet(1)">Set 2 — Systems & Specialties</div>
-  <div class="tab" onclick="switchSet(2)">Set 3 — Advances & Applied</div>
+  <div class="page-header">
+    <h1>DNB General Medicine — Set 4</h1>
+    <p>Gap-analysis of 250 questions across 25 papers (2022–2026). Every question here is either a complete blank or a substantially different angle on a tested topic.</p>
+  </div>
+
+  <div class="hero-band">
+    <div class="hero-inner">
+      <div class="hero-label">Predicted · High-Probability · Not seen before</div>
+      <h2>40 Questions likely to appear next</h2>
+      <p>Built by systematically identifying what has never been asked across all 25 DNB General Medicine papers.</p>
+      <div class="hero-meta">
+        <span class="chip">40 questions</span>
+        <span class="chip">10 topics</span>
+        <span class="chip hot">🔥 22 high-probability picks</span>
+        <span class="chip">Click to expand sub-parts</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert-bar">
+    <div class="alert-inner">
+      <strong>How to use:</strong> Click any question to reveal the full sub-parts and the reasoning for why it's likely to appear. Filter by topic below. Track your revision with the progress bar.
+    </div>
+  </div>
+
+  <div class="progress-strip">
+    <div class="pbar"><div class="pfill" id="pf"></div></div>
+    <div class="ptext" id="pt">0 / 40 reviewed</div>
+  </div>
+
+  <div class="filter-row" id="filters"></div>
+  <div class="qlist"      id="ql"></div>
+
+  <div class="page-footer">DNB General Medicine Set 4 · Gap analysis of 2022–2026 papers · For exam preparation only</div>
 </div>
 
-<div class="meta">
-  <span class="badge info" id="setlabel">Set 1 · 40 questions</span>
-  <span class="badge" id="topicbadge">All topics</span>
-</div>
+<!-- ============================================================
+     SECTION 3 : Pattern-Based Predictions from 2022–2026 Papers
+     ============================================================ -->
+<div id="s3" class="section">
 
-<div class="progress">
-  <div class="pbar"><div class="pfill" id="pfill" style="width:0%"></div></div>
-  <div class="ptext" id="ptext">0 / 40 reviewed</div>
-</div>
+  <div class="page-header">
+    <h1>DNB General Medicine — Set 3</h1>
+    <p>40 high-yield predicted questions derived by pattern analysis of all 25 papers (2022–2026). Topics that recurred ≥3 times are marked 🔥. Questions marked "New" appeared first in 2025/26 papers.</p>
+  </div>
 
-<div class="qlist" id="qlist"></div>
-</div>
+  <div class="hero-band">
+    <div class="hero-inner">
+      <div class="hero-label">Pattern-Based · High-Frequency · 2022–2026</div>
+      <h2>40 Most Probable Questions — Set 3</h2>
+      <p>Built by mapping topic frequencies across all 25 DNB GM papers and identifying recurring patterns per paper (P1–P4).</p>
+      <div class="hero-meta">
+        <span class="chip">40 questions</span>
+        <span class="chip">8 systems</span>
+        <span class="chip hot">🔥 26 high-probability picks</span>
+        <span class="chip">Frequency bars included</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert-bar">
+    <div class="alert-inner">
+      <strong>Exam pattern insight:</strong> Paper 1 = Basic science/Physiology · Paper 2 = Clinical approach · Paper 3 = Specialties/Infections · Paper 4 = Recent advances/Ethics. The "unseen" twist is usually a familiar topic asked from a new angle or with a recent guideline update.
+    </div>
+  </div>
+
+  <div class="progress-strip">
+    <div class="pbar"><div class="pfill" id="pf3"></div></div>
+    <div class="ptext" id="pt3">0 / 40 reviewed</div>
+  </div>
+
+  <div class="filter-row" id="filters3"></div>
+  <div class="qlist" id="ql3"></div>
+
+  <div class="page-footer">DNB General Medicine Set 3 · Pattern prediction from 2022–2026 papers · For exam preparation only</div>
+</div><!-- end s3 -->
+
+<!-- ============================================================
+     SECTION 2 : Structured Bank Papers I–IV (gemini-code.html)
+     ============================================================ -->
+<div id="s2" class="section">
+
+  <div class="page-header">
+    <h1>DNB General Medicine Post-Graduate Board Examination</h1>
+    <p>Strategic High-Yield Question Bank: 40 Most Predictable & High-Probability Structural Questions mapped by Systemic Blueprints</p>
+  </div>
+
+  <div class="container">
+    <div class="tabs-nav">
+      <button class="tab-btn active" onclick="openPaper(event,'paper1')">Paper I: Basic Sciences & Hematology</button>
+      <button class="tab-btn"        onclick="openPaper(event,'paper2')">Paper II: Cardio, Resp, GI & ICU</button>
+      <button class="tab-btn"        onclick="openPaper(event,'paper3')">Paper III: Endo, Nephro & ID</button>
+      <button class="tab-btn"        onclick="openPaper(event,'paper4')">Paper IV: Neuro, Psych & Advances</button>
+    </div>
+
+    <!-- PAPER 1 -->
+    <div id="paper1" class="tab-content active">
+      <div class="paper-info"><strong>Focus Areas:</strong> Basic Sciences, Fluid-Electrolyte Balance, Rheumatology, Immunology, and Hematology.</div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 1</span><span class="marks-badge">Total Marks: 10</span></div><div class="sub-question"><div class="sub-item"><strong>(a)</strong> Define Systems Biology and Systems Pathobiology. Explain with examples how chronic multi-system diseases are defined as a complex network. <span class="marks-split">[5]</span></div><div class="sub-item"><strong>(b)</strong> Describe the mechanism of hyperbaric oxygen therapy (HBO<sub>2</sub>T) and enlist its absolute clinical indications, contraindications, and potential toxicities. <span class="marks-split">[5]</span></div></div></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 2</span><span class="marks-badge">Total Marks: 10</span></div><div class="sub-question"><div class="sub-item"><strong>(a)</strong> Describe the physiology of the plantar response and draw a meticulously labeled diagram of its complete reflex arc. <span class="marks-split">[5]</span></div><div class="sub-item"><strong>(b)</strong> Discuss the localizing clinical significance of the anomalies observed in abnormal extensor plantar reflexes. <span class="marks-split">[5]</span></div></div></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 3</span><span class="marks-badge">Total Marks: 10</span></div><div class="sub-question"><div class="sub-item"><strong>(a)</strong> Outline the surgical and vascular anatomy of the Inferior Vena Cava (IVC). <span class="marks-split">[4]</span></div><div class="sub-item"><strong>(b)</strong> Detail the distinct clinical syndromes and features found in IVC obstructions at different anatomical levels (infra-renal, hepatic, and supra-hepatic). <span class="marks-split">[6]</span></div></div></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 4</span><span class="marks-badge">Total Marks: 10</span></div><div class="sub-question"><div class="sub-item"><strong>(a)</strong> Describe the complete physiology of iron absorption, systemic transport, and intracellular storage regulations in the human body. <span class="marks-split">[5]</span></div><div class="sub-item"><strong>(b)</strong> Discuss the diagnostic biochemical workup of latent iron deficiency and the adverse effects associated with intravenous versus oral iron preparation therapies. <span class="marks-split">[5]</span></div></div></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 5</span><span class="marks-badge">Total Marks: 10</span></div><div class="sub-question"><div class="sub-item"><strong>(a)</strong> Explain the exact biochemical and physiological basis of the clinical manifestations, hypercoagulability, and microvascular complications seen in patients with chronic hemolytic anemias. <span class="marks-split">[5]</span></div><div class="sub-item"><strong>(b)</strong> Discuss the unique clinical features, diagnostic flow-cytometry markings, and target therapies for Paroxysmal Nocturnal Hemoglobinuria (PNH). <span class="marks-split">[5]</span></div></div></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 6</span><span class="marks-badge">Total Marks: 10</span></div><p style="margin-top:5px">Classify plasma cell disorders comprehensively. Discuss the clinical features, dynamic diagnostic criteria (IMWG), staging, and therapeutic management of a newly diagnosed case of Multiple Myeloma.</p></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 7</span><span class="marks-badge">Total Marks: 10</span></div><p style="margin-top:5px">Discuss the underlying immuno-pathophysiology, characteristic cutaneous and visceral clinical features, diagnostic autoantibody panels, and modern therapeutic protocols for Systemic Sclerosis (Scleroderma).</p></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 8</span><span class="marks-badge">Total Marks: 10</span></div><p style="margin-top:5px">Detail the clinical presentation, radiological hallmarks (including modified New York criteria), extra-articular manifestations, and contemporary management (including biologic therapies) of Ankylosing Spondylitis. <span class="marks-split">[3+3+4]</span></p></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 9</span><span class="marks-badge">Total Marks: 10</span></div><div class="sub-question"><div class="sub-item"><strong>(a)</strong> What is bone remodeling? Describe the cellular roles of the RANK/RANKL/OPG pathway. <span class="marks-split">[3]</span></div><div class="sub-item"><strong>(b)</strong> Define Osteoporosis, enlist the primary classes of medications associated with an increased risk of secondary osteoporosis, and discuss its sequential pharmacological management. <span class="marks-split">[2+2+3]</span></div></div></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 10</span><span class="marks-badge">Total Marks: 10</span></div><p style="margin-top:5px">Classify Primary Immunodeficiency Syndromes. Discuss the clinical presentation, warning signs, and management updates for Common Variable Immunodeficiency (CVID).</p></div></div>
+    </div>
+
+    <!-- PAPER 2 -->
+    <div id="paper2" class="tab-content">
+      <div class="paper-info"><strong>Focus Areas:</strong> Cardiology, Respiratory Medicine, Gastroenterology, Hepatology, and Intensive Care.</div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 11</span><span class="marks-badge">Total Marks: 10</span></div><p style="margin-top:5px">Define Acute Coronary Syndromes (ACS). Discuss the step-by-step emergency in-hospital stabilization, reperfusion strategies, and acute mechanical/electrical complications of an acute ST-Elevation Myocardial Infarction (STEMI). <span class="marks-split">[3+4+3]</span></p></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 12</span><span class="marks-badge">Total Marks: 10</span></div><div class="sub-question"><div class="sub-item"><strong>(a)</strong> Explain the underlying cellular and neurohormonal mechanisms driving Heart Failure with Reduced Ejection Fraction (HFrEF). <span class="marks-split">[5]</span></div><div class="sub-item"><strong>(b)</strong> Discuss the different types of permanent pacemakers currently available and outline their specific Class-I clinical indications. <span class="marks-split">[5]</span></div></div></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 13</span><span class="marks-badge">Total Marks: 10</span></div><div class="sub-question"><div class="sub-item"><strong>(a)</strong> Describe the standard spirometric patterns and diagnostic criteria in the assessment of obstructive lung disorders, specifically COPD and Bronchial Asthma. <span class="marks-split">[5]</span></div><div class="sub-item"><strong>(b)</strong> Discuss the step-up inhaler therapy for COPD (GOLD stages) and the mechanisms, indications, and contraindications of non-invasive positive pressure ventilation (NIPPV) in an acute exacerbation of COPD. <span class="marks-split">[5]</span></div></div></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 14</span><span class="marks-badge">Total Marks: 10</span></div><div class="sub-question"><div class="sub-item"><strong>(a)</strong> Discuss the staging, complications, and modern therapeutic management of Idiopathic Pulmonary Fibrosis (IPF). <span class="marks-split">[5]</span></div><div class="sub-item"><strong>(b)</strong> Describe the ATS/ERS diagnostic criteria, prognostic scoring systems (GAP model), and therapeutic options for IPF. <span class="marks-split">[5]</span></div></div></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 15</span><span class="marks-badge">Total Marks: 10</span></div><p style="margin-top:5px">A 45-year-old male presents with progressive dyspnea and mild jaundice. Hb 5.2 g/dL, MCV 68, RDW 18%; peripheral smear shows hypochromic microcytic red cells; DAT is positive. Detail your diagnostic approach and definitive management. <span class="marks-split">[4+6]</span></p></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 16</span><span class="marks-badge">Total Marks: 10</span></div><div class="sub-question"><div class="sub-item"><strong>(a)</strong> Describe the pathophysiology, clinical features, and laboratory criteria for diagnosing ARDS using the Berlin definition. <span class="marks-split">[5]</span></div><div class="sub-item"><strong>(b)</strong> Discuss the principles of lung-protective ventilation strategies and the role of neuromuscular blockade, prone positioning, and steroids in ARDS management. <span class="marks-split">[5]</span></div></div></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 17</span><span class="marks-badge">Total Marks: 10</span></div><p style="margin-top:5px">Discuss the etiopathogenesis, clinical features, and prognostic scoring systems (APACHE II, SOFA) for Sepsis and Septic Shock, and outline the "Surviving Sepsis Campaign" bundle of management. <span class="marks-split">[3+3+4]</span></p></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 18</span><span class="marks-badge">Total Marks: 10</span></div><p style="margin-top:5px">Describe the pathophysiology and staging of acute-on-chronic liver failure (ACLF). Discuss the key diagnostic criteria (APASL vs EASL-CLIF) and the principles of ICU management including renal replacement and liver assist devices. <span class="marks-split">[4+2+4]</span></p></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 19</span><span class="marks-badge">Total Marks: 10</span></div><div class="sub-question"><div class="sub-item"><strong>(a)</strong> Discuss the etiopathogenesis, clinical features, and diagnosis of Autoimmune Hepatitis (AIH). <span class="marks-split">[5]</span></div><div class="sub-item"><strong>(b)</strong> Describe the induction and maintenance immunosuppression regimens for AIH and the indications and outcomes of liver transplantation. <span class="marks-split">[5]</span></div></div></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 20</span><span class="marks-badge">Total Marks: 10</span></div><div class="sub-question"><div class="sub-item"><strong>(a)</strong> Discuss the pathogenesis, clinical features, and staging systems (Child-Turcotte-Pugh and MELD) for Decompensated Cirrhosis. <span class="marks-split">[5]</span></div><div class="sub-item"><strong>(b)</strong> Describe the clinical features, diagnostic criteria, and specific management of Spontaneous Bacterial Peritonitis (SBP) and Hepatorenal Syndrome. <span class="marks-split">[5]</span></div></div></div></div>
+    </div>
+
+    <!-- PAPER 3 -->
+    <div id="paper3" class="tab-content">
+      <div class="paper-info"><strong>Focus Areas:</strong> Endocrinology, Nephrology, Infectious Diseases, and Oncology.</div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 21</span><span class="marks-badge">Total Marks: 10</span></div><p style="margin-top:5px">Define and classify Diabetes Mellitus. Discuss the pathophysiology, clinical significance, and therapeutic targets for Microvascular Complications (Nephropathy, Retinopathy, Neuropathy) in Type 2 Diabetes. <span class="marks-split">[2+8]</span></p></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 22</span><span class="marks-badge">Total Marks: 10</span></div><p style="margin-top:5px">Classify Hypertension. Discuss the target-organ damage, work-up, and management strategies for a patient with resistant hypertension. Define and discuss hypertensive emergencies vs. urgencies. <span class="marks-split">[2+4+4]</span></p></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 23</span><span class="marks-badge">Total Marks: 10</span></div><div class="sub-question"><div class="sub-item"><strong>(a)</strong> Outline the pathophysiology, clinical presentation, and diagnostic criteria for Acute Kidney Injury (KDIGO). <span class="marks-split">[5]</span></div><div class="sub-item"><strong>(b)</strong> Discuss the conservative management and specific indications for emergency renal replacement therapy (RRT) in AKI. <span class="marks-split">[5]</span></div></div></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 24</span><span class="marks-badge">Total Marks: 10</span></div><div class="sub-question"><div class="sub-item"><strong>(a)</strong> Describe the mechanisms, epidemiology, and clinical implications of Antimicrobial Resistance (AMR) in Gram-negative bacterial infections. <span class="marks-split">[5]</span></div><div class="sub-item"><strong>(b)</strong> Outline the empirical and targeted antibiotic strategies for Hospital-Acquired Pneumonia (HAP) and Ventilator-Associated Pneumonia (VAP). <span class="marks-split">[5]</span></div></div></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 25</span><span class="marks-badge">Total Marks: 10</span></div><div class="sub-question"><div class="sub-item"><strong>(a)</strong> Discuss the natural history of HIV infection, indications for ART, WHO clinical staging, and the choice of initial first-line ART regimens. <span class="marks-split">[5]</span></div><div class="sub-item"><strong>(b)</strong> Discuss the prophylaxis and management of the three most common AIDS-defining opportunistic infections: PCP, CNS Toxoplasmosis, and Cryptococcal meningitis. <span class="marks-split">[5]</span></div></div></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 26</span><span class="marks-badge">Total Marks: 10</span></div><p style="margin-top:5px">Discuss the pathogenesis, classification, clinical features, diagnosis and management of Nephrotic Syndrome in adults. Highlight the specific therapy for Minimal Change Disease and Focal Segmental Glomerulosclerosis. <span class="marks-split">[3+3+4]</span></p></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 27</span><span class="marks-badge">Total Marks: 10</span></div><div class="sub-question"><div class="sub-item"><strong>(a)</strong> Classify thyroid disorders. Discuss the clinical features, biochemical diagnosis, and definitive management options for Graves' Disease. <span class="marks-split">[5]</span></div><div class="sub-item"><strong>(b)</strong> Discuss the clinical presentation, etiologic causes, and therapeutic approach to Thyroid Storm. <span class="marks-split">[5]</span></div></div></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 28</span><span class="marks-badge">Total Marks: 10</span></div><div class="sub-question"><div class="sub-item"><strong>(a)</strong> Classify and describe the pathophysiology of Dyslipidemias (Fredrickson Classification). Discuss the mechanisms of action, clinical indications, and adverse effects of Statins and PCSK-9 inhibitors. <span class="marks-split">[5]</span></div><div class="sub-item"><strong>(b)</strong> Discuss GLP-1 receptor agonists and SGLT2 inhibitors with specific focus on their cardiovascular and renal protective mechanisms. <span class="marks-split">[5]</span></div></div></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 29</span><span class="marks-badge">Total Marks: 10</span></div><p style="margin-top:5px">Enumerate the paraneoplastic syndromes across different organ systems. Describe the clinical presentations, biochemical screening associations, and definite management of endocrine paraneoplastic syndromes (e.g., SIADH, ectopic ACTH). <span class="marks-split">[3+(2+2+3)]</span></p></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 30</span><span class="marks-badge">Total Marks: 10</span></div><p style="margin-top:5px">Enumerate the paraneoplastic syndromes across different organ systems. Describe the clinical presentations, biochemical screening associations, and definite management of endocrine paraneoplastic syndromes (e.g., SIADH, ectopic ACTH). <span class="marks-split">[3+(2+2+3)]</span></p></div></div>
+    </div>
+
+    <!-- PAPER 4 -->
+    <div id="paper4" class="tab-content">
+      <div class="paper-info"><strong>Focus Areas:</strong> Neurology, Psychiatry, Experimental Therapeutics, Recent Advances, and Research Biostatistics.</div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 31</span><span class="marks-badge">Total Marks: 10</span></div><p style="margin-top:5px">Describe the core operational components, specialized types of Stroke Units, and acute hyperacute management protocols (including thrombolysis and mechanical thrombectomy criteria) within an optimized stroke unit. <span class="marks-split">[3+2+5]</span></p></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 32</span><span class="marks-badge">Total Marks: 10</span></div><p style="margin-top:5px">Enumerate the comprehensive causes of Reversible Dementias. Discuss the clinical presentation, diagnostic biomarkers, and recent breakthroughs/monoclonal antibody advances in the management of Alzheimer's Disease. <span class="marks-split">[4+6]</span></p></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 33</span><span class="marks-badge">Total Marks: 10</span></div><p style="margin-top:5px">Define Alcohol Dependence Syndrome. Describe its clinical manifestations, neurobiology of withdrawal, and long-term pharmacological and psychological treatment modalities. <span class="marks-split">[2+4+4]</span></p></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 34</span><span class="marks-badge">Total Marks: 10</span></div><p style="margin-top:5px">Classify Angiotensin Receptor Blockers (ARBs). Discuss their exact receptor-level mechanism of action, hemodynamic indications, organ-protective benefits, and prominent side effects. <span class="marks-split">[2+(4+2+2)]</span></p></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 35</span><span class="marks-badge">Total Marks: 10</span></div><div class="sub-question"><div class="sub-item"><strong>(a)</strong> Discuss the therapeutic indications and physiological role of Intravenous Immunoglobulins (IVIG) across diverse neurological, hematological, and rheumatological disorders. <span class="marks-split">[5]</span></div><div class="sub-item"><strong>(b)</strong> Outline the recent clinical indications and therapeutic roles of Janus Kinase (JAK) inhibitors and PCSK9 inhibitors in clinical medicine. <span class="marks-split">[5]</span></div></div></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 36</span><span class="marks-badge">Total Marks: 10</span></div><div class="sub-question"><div class="sub-item"><strong>(a)</strong> Enumerate the complications, clinical signs, and management of androgen abuse by recreational bodybuilders and athletes. <span class="marks-split">[5]</span></div><div class="sub-item"><strong>(b)</strong> Discuss the clinical features, laboratory diagnosis, and acute/chronic updates in the treatment of Acute Gout. <span class="marks-split">[5]</span></div></div></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 37</span><span class="marks-badge">Total Marks: 10</span></div><div class="sub-question"><div class="sub-item"><strong>(a)</strong> What are the current medical strategies and cell lines used for Stem Cell Transplantation? <span class="marks-split">[5]</span></div><div class="sub-item"><strong>(b)</strong> Discuss the therapeutic applications and current clinical trial landscape of stem cells in cardiovascular regeneration and neurological disorders. <span class="marks-split">[5]</span></div></div></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 38</span><span class="marks-badge">Total Marks: 10</span></div><div class="sub-question"><div class="sub-item"><strong>(a)</strong> Discuss the pathology and clinical spectrum of E-cigarette or Vaping Product Use-Associated Lung Injury (EVALI). <span class="marks-split">[5]</span></div><div class="sub-item"><strong>(b)</strong> Discuss evidence-based pharmacological and behavioral smoking cessation strategies. <span class="marks-split">[5]</span></div></div></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 39</span><span class="marks-badge">Total Marks: 10</span></div><div class="sub-question"><div class="sub-item"><strong>(a)</strong> Outline the profound impacts of Air Pollution on chronic cardiorespiratory and metabolic health. <span class="marks-split">[5]</span></div><div class="sub-item"><strong>(b)</strong> Discuss the ecological, immunological, and socioeconomic factors driving the global emergence of novel zoonotic viral infections. <span class="marks-split">[5]</span></div></div></div></div>
+      <div class="question-card"><input type="checkbox" class="tracker-checkbox" onchange="toggleComplete(this)"><div class="question-body"><div class="question-header"><span class="question-number">Question 40</span><span class="marks-badge">Total Marks: 10</span></div><div class="sub-question"><div class="sub-item"><strong>(a)</strong> What is sample size calculation? Describe the exact mathematical method and statistical parameters needed for calculating sample size when determining the prevalence of a disease in a cross-sectional study. <span class="marks-split">[2+4]</span></div><div class="sub-item"><strong>(b)</strong> Discuss the common statistical errors, biases, and confounding factors in estimating sample size for clinical research studies. <span class="marks-split">[4]</span></div></div></div></div>
+    </div>
+
+  </div><!-- .container -->
+  <div class="page-footer">DNB General Medicine · Structured Question Bank · Papers I–IV · For exam preparation only</div>
+</div><!-- end s2 -->
 
 <script>
-const sets = [
-[
-{n:1,topic:"Cardiology",src:"Paper 1 (2025)",q:"Explain the Frank–Starling mechanism of the heart and its clinical relevance in heart failure.",sub:"(a) Describe the Frank–Starling mechanism with a pressure–volume loop. [5]\n(b) Describe the determinants of cardiac output and their regulation. [5]"},
-{n:2,topic:"Cardiology",src:"Paper 1 (2024-Oct)",q:"Discuss the physiological basis of the cardiac cycle.",sub:"(a) Discuss physiological basis of the cardiac cycle. [4]\n(b) Explain changes in cardiac cycle and cardiac output during sub-maximal and maximal exercises. [3+3]"},
-{n:3,topic:"Cardiology",src:"Paper 1 (2023-Apr)",q:"What is re-entry? Explain its role in cardiac arrhythmias with diagrams.",sub:"(a) What is re-entry? Explain the role of re-entry in cardiac arrhythmias. [5]\n(b) Describe the management of atrial fibrillation. [5]"},
-{n:4,topic:"Cardiology",src:"Paper 2 (2022)",q:"What are the causes of dilated cardiomyopathy? Discuss its diagnosis and management.",sub:"(a) Causes of dilated cardiomyopathy. [3]\n(b) Diagnosis and management of dilated cardiomyopathy. [2+5]"},
-{n:5,topic:"Cardiology",src:"Paper 4 (2022)",q:"What is cardiac resynchronisation therapy? Discuss the indications of ICD implantation.",sub:"(a) What is cardiac resynchronisation therapy? [5]\n(b) Indications of ICD implantation in heart diseases. [5]"},
-{n:6,topic:"Cardiology",src:"Paper 4 (2023-Oct)",q:"Discuss the aetiopathogenesis and recent advances in management of COPD.",sub:"(a) Aetiopathogenesis of COPD. [5]\n(b) Recent advances in management of COPD. [5]"},
-{n:7,topic:"Cardiology",src:"Paper 4 (2024-May)",q:"Explain the mechanism of heart failure with reduced ejection fraction and types of permanent pacemakers.",sub:"(a) Mechanism of HFrEF. [5]\n(b) Types of permanent pacemakers and their indications. [5]"},
-{n:8,topic:"Cardiology",src:"Paper 3 (2025)",q:"Write about viral myocarditis and Takotsubo cardiomyopathy.",sub:"(a) Viral myocarditis. [5]\n(b) Takotsubo cardiomyopathy. [5]"},
-{n:9,topic:"Nephrology",src:"Paper 1 (2024-Oct)",q:"Describe the functions of the loop of Henle and inherited disorders involving it.",sub:"(a) Functions of loop of Henle. [4]\n(b) Inherited disorders involving the Loop of Henle. [3]\n(c) Bartter's Syndrome. [3]"},
-{n:10,topic:"Nephrology",src:"Paper 2 (2024-May)",q:"Discuss the pathophysiology of ischemic acute kidney injury and novel biomarkers.",sub:"(a) Pathophysiology of ischemic AKI. [4]\n(b) Novel biomarkers of AKI. [3]\n(c) Complications of peritoneal dialysis. [3]"},
-{n:11,topic:"Nephrology",src:"Paper 4 (2022)",q:"What are renal failure indices? Write about peritoneal dialysis.",sub:"(a) Renal failure indices. [5]\n(b) Peritoneal dialysis. [5]"},
-{n:12,topic:"Nephrology",src:"Paper 2 (2024-Oct)",q:"Discuss etiopathogenesis, clinical manifestations and treatment of autosomal dominant polycystic kidney disease.",sub:"Etiopathogenesis [4] + Clinical manifestations [3] + Treatment [3]"},
-{n:13,topic:"Endocrinology",src:"Paper 1 (2022)",q:"Discuss testosterone transport and metabolism. How do you approach gynaecomastia?",sub:"(a) Testosterone transport and metabolism. [5]\n(b) Approach to a case of gynaecomastia. [5]"},
-{n:14,topic:"Endocrinology",src:"Paper 1 (2024-Oct)",q:"Compare intermittent fasting versus caloric restriction. Discuss insulin resistance.",sub:"(a) Intermittent Fasting vs Caloric Restriction. [4]\n(b) Insulin Resistance – causes, diagnosis, treatment. [2+2+2]"},
-{n:15,topic:"Endocrinology",src:"Paper 2 (2024-Oct)",q:"Discuss incretin-based therapy and gestational diabetes.",sub:"(a) Incretin-Based Therapy. [5]\n(b) Diagnosis and treatment of Gestational Diabetes. [2+3]"},
-{n:16,topic:"Endocrinology",src:"Paper 1 (2022)",q:"Write classification of diabetes mellitus. How will you manage hyperosmolar hyperglycemic state?",sub:"Classification of DM [5] + Management of HHS [5]"},
-{n:17,topic:"Endocrinology",src:"Paper 1 (2024-Oct)",q:"Describe hormonal feedback regulatory systems and management of hyperprolactinemia.",sub:"(a) Hormonal feedback regulatory systems. [2]\n(b) Causes, clinical features and treatment of hyperprolactinemia. [3+3+2]"},
-{n:18,topic:"Endocrinology",src:"Paper 3 (2025)",q:"Describe pathophysiology and clinical features of acromegaly and its management.",sub:"(a) Pathophysiology and clinical features of acromegaly. [5]\n(b) Diagnostic tests and management of acromegaly. [5]"},
-{n:19,topic:"Neurology",src:"Paper 1 (2025)",q:"Draw and label a cross-section of the midbrain at the superior colliculus. Describe major midbrain stroke syndromes.",sub:"(a) Labelled cross-section of midbrain at superior colliculus. [5]\n(b) Clinical features of major midbrain stroke syndromes. [5]"},
-{n:20,topic:"Neurology",src:"Paper 1 (2023-Apr)",q:"Describe the plantar response and draw its reflex arc. Discuss abnormalities.",sub:"Plantar response + labelled reflex arc diagram [5] + Abnormalities and their causes [5]"},
-{n:21,topic:"Neurology",src:"Paper 1 (2024-Oct)",q:"What are peripheral and central mechanisms for pain? Drugs for neuropathic pain and subacute combined degeneration.",sub:"(a) Peripheral and central mechanisms for pain. [4]\n(b) Drugs for neuropathic pain. [3]\n(c) Subacute combined degeneration of spinal cord. [3]"},
-{n:22,topic:"Neurology",src:"Paper 4 (2022)",q:"What is neuromyelitis optica spectrum disorder? Discuss diagnostic criteria, clinical features and treatment.",sub:"Definition [2] + Diagnostic criteria [3] + Clinical features [2] + Treatment [3]"},
-{n:23,topic:"Neurology",src:"Paper 3 (2024-Oct)",q:"Management of acute ischemic stroke and strategies to prevent recurrence.",sub:"(a) Management of Acute Ischemic Stroke. [5]\n(b) Strategies to prevent recurrence of Ischemic Stroke. [5]"},
-{n:24,topic:"Haematology",src:"Paper 1 (2022)",q:"What are myelodysplastic syndromes? Give their classification. Discuss complications following HSCT.",sub:"(a) MDS definition. [4]\n(b) Classification of MDS. [3]\n(c) Complications following haematopoietic cell transplantation. [3]"},
-{n:25,topic:"Haematology",src:"Paper 2 (2022)",q:"Discuss etiology, clinical features, diagnosis and management of idiopathic pulmonary fibrosis.",sub:"Classification of ILDs [3] + Clinical features, diagnosis and management of IPF [2+2+3]"},
-{n:26,topic:"Haematology",src:"Paper 2 (2023-Apr)",q:"Describe the physiology of iron absorption and transport. Discuss diagnosis of iron deficiency and adverse effects of treatment.",sub:"Iron absorption/transport [4] + Diagnosis of iron deficiency [3] + Adverse effects [3]"},
-{n:27,topic:"Haematology",src:"Paper 4 (2022)",q:"Clinical features and diagnosis of thalassemia major. Discuss immune-mediated adverse reactions of blood transfusion.",sub:"(a) Thalassemia major: clinical features + diagnosis. [2+3]\n(b) Immune-mediated adverse reactions of blood transfusion. [5]"},
-{n:28,topic:"Gastroenterology",src:"Paper 1 (2022)",q:"Discuss aetiopathogenesis and treatment of chronic hepatitis C infection.",sub:"Aetiopathogenesis [5] + Treatment [5]"},
-{n:29,topic:"Gastroenterology",src:"Paper 1 (2022)",q:"Discuss physiology of swallowing and approach to a case of dysphagia.",sub:"(a) Physiology of swallowing. [5]\n(b) Approach to dysphagia. [5]"},
-{n:30,topic:"Gastroenterology",src:"Paper 4 (2022)",q:"How do you manage refractory ascites? Discuss hepatorenal syndrome and indications for liver transplantation.",sub:"(a) Management of refractory ascites. [3]\n(b) Hepatorenal syndrome. [5]\n(c) Indications for liver transplantation. [2]"},
-{n:31,topic:"Pulmonology",src:"Paper 1 (2022)",q:"What are the different types of ventricular arrhythmias? Discuss clinical features and management.",sub:"Types [2] + Clinical features [3] + Management [5]"},
-{n:32,topic:"Pulmonology",src:"Paper 2 (2024-Oct)",q:"Enumerate viral agents causing haemorrhagic fever. Describe clinical features and management of Dengue.",sub:"(a) Viral agents causing haemorrhagic fever. [3]\n(b) Clinical features and management of Dengue fever. [3+4]"},
-{n:33,topic:"Endocrinology",src:"Paper 1 (2024-May)",q:"Discuss approach to a patient with chest pain.",sub:"Approach to a patient with pain chest [10]. Include: differential diagnosis, history, examination, investigations, management."},
-{n:34,topic:"Rheumatology",src:"Paper 1 (2023-Oct)",q:"Write about drug-induced lupus. Describe clinical manifestations and diagnosis of anti-phospholipid syndrome.",sub:"(a) Drug-induced lupus. [3]\n(b) Clinical manifestations and diagnosis of APS. [4+3]"},
-{n:35,topic:"Rheumatology",src:"Paper 1 (2023-Oct)",q:"Define and classify shock. Discuss haemodynamic characteristics of major types of shock.",sub:"Definition and classification [5] + Haemodynamic characteristics [5]"},
-{n:36,topic:"Immunology",src:"Paper 1 (2025)",q:"Classify hypersensitivity reactions with examples. Describe the immunopathogenesis of type III hypersensitivity.",sub:"(a) Classification of hypersensitivity reactions with examples. [5]\n(b) Immunopathogenesis of type III hypersensitivity and clinical relevance. [5]"},
-{n:37,topic:"Immunology",src:"Paper 1 (2024-May)",q:"What are the major components of the innate immune system? Classify primary immune deficiency syndromes.",sub:"(a) Major components of innate immune system. [5]\n(b) Classification of primary immune deficiency syndromes. [5]"},
-{n:38,topic:"Pulmonology",src:"Paper 1 (2022)",q:"Define OSA/hypopnea syndrome. Discuss risk factors, diagnosis and treatment.",sub:"(a) Define OSA/hypopnea syndrome. [2]\n(b) Risk factors for OSA. [2]\n(c) Diagnosis and severity assessment. [3]\n(d) Treatment. [3]"},
-{n:39,topic:"Metabolic",src:"Paper 1 (2022)",q:"What are the causes of hypophosphatemia? Discuss clinical manifestations and treatment of severe hypophosphatemia.",sub:"Causes [3] + Clinical manifestations [4] + Treatment [3]"},
-{n:40,topic:"Metabolic",src:"Paper 1 (2024-Oct)",q:"Describe magnesium metabolism. Discuss causes, clinical manifestations and treatment of hypomagnesemia.",sub:"(a) Magnesium metabolism. [3]\n(b) Causes + clinical manifestations + treatment of hypomagnesemia. [3+2+2]"},
-],
-[
-{n:1,topic:"Gastroenterology",src:"Paper 3 (2022)",q:"Differences between ulcerative colitis and Crohn's disease. Extra-intestinal manifestations and treatment of UC.",sub:"(a) Differences between UC and Crohn's disease. [5]\n(b) Extra-intestinal manifestations of UC. [2]\n(c) Treatment of UC. [3]"},
-{n:2,topic:"Gastroenterology",src:"Paper 2 (2023-Oct)",q:"Write about small bowel endoscopy. Diagnose and manage irritable bowel syndrome.",sub:"(a) Small bowel endoscopy. [3]\n(b) Diagnosis of IBS. [3]\n(c) Management of IBS. [4]"},
-{n:3,topic:"Gastroenterology",src:"Paper 3 (2023-Apr)",q:"Enumerate causes of acute pancreatitis. Clinical manifestations and management.",sub:"Causes [2] + Clinical manifestations [4] + Management [4]"},
-{n:4,topic:"Gastroenterology",src:"Paper 3 (2024-May)",q:"Role of esophageal manometry and reflux testing. Discuss chronic gastritis and its management.",sub:"(a) Esophageal manometry and reflux testing in GI disorders. [5]\n(b) Chronic gastritis and its management. [5]"},
-{n:5,topic:"Gastroenterology",src:"Paper 2 (2022)",q:"Discuss hepatic porphyrias. Clinical features, diagnosis and treatment of acute intermittent porphyria.",sub:"(a) Hepatic porphyrias. [3]\n(b) Clinical features, diagnosis and treatment of AIP. [2+3+2]"},
-{n:6,topic:"Infectious Disease",src:"Paper 3 (2022)",q:"Write about nontuberculous mycobacterial infections and BPaLM regimen for tuberculosis.",sub:"(a) Nontuberculous mycobacterial infections. [5]\n(b) BPaLM regime in management of tuberculosis. [5]"},
-{n:7,topic:"Infectious Disease",src:"Paper 3 (2024-Oct)",q:"Discuss pathophysiology and diagnosis of CMV infection. Describe treatment in immunocompromised host.",sub:"(a) Pathophysiology and diagnosis of CMV infection. [3+2]\n(b) Treatment of CMV disease in immunocompromised host. [5]"},
-{n:8,topic:"Infectious Disease",src:"Paper 2 (2024-Oct)",q:"Discuss criteria for infective endocarditis. Etiology, complications and management of right-sided IE.",sub:"(a) Criteria for diagnosis of IE (Duke criteria). [4]\n(b) Etiology, complications and management of right-sided IE. [2+2+2]"},
-{n:9,topic:"Infectious Disease",src:"Paper 2 (2024-Oct)",q:"Discuss pathogenesis of tetanus, risk factors, management and prevention.",sub:"(a) Pathogenesis of tetanus + risk factors for adult tetanus. [3+2]\n(b) Management of tetanus + tetanus prevention. [5]"},
-{n:10,topic:"Infectious Disease",src:"Paper 2 (2023-Oct)",q:"Discuss etiopathogenesis, clinical features, laboratory diagnosis and treatment of Nipah virus infection.",sub:"(a) Emerging and re-emerging diseases. [2]\n(b) Nipah virus: etiopathogenesis + clinical features + lab diagnosis + treatment. [2+2+2+2]"},
-{n:11,topic:"Infectious Disease",src:"Paper 2 (2025)",q:"Describe etiopathogenesis and clinical features of leptospirosis. Write about scoring systems used in diagnosis.",sub:"(a) Etiopathogenesis and clinical features of leptospirosis. [5]\n(b) Scoring system in diagnosis of leptospirosis. [2]\n(c) Management of leptospirosis. [3]"},
-{n:12,topic:"Neurology",src:"Paper 2 (2022)",q:"Discuss clinical features, diagnosis, differential diagnosis and treatment of myasthenia gravis.",sub:"Clinical features [2] + Diagnosis [2] + Differential diagnosis [2] + Treatment [4]"},
-{n:13,topic:"Neurology",src:"Paper 2 (2022)",q:"Clinical features and management of migraine.",sub:"Clinical features [5] + Management [5]"},
-{n:14,topic:"Neurology",src:"Paper 3 (2025)",q:"Describe etiopathogenesis and clinical presentation of Parkinson's disease. Red flag signs.",sub:"(a) Etiopathogenesis and clinical presentation of PD. [5]\n(b) Management of drug-induced parkinsonism. [2]\n(c) Red flag signs for PD. [3]"},
-{n:15,topic:"Neurology",src:"Paper 1 (2024-May)",q:"What is autoregulation of cerebral blood flow? Stepwise treatment of elevated intracranial pressure.",sub:"(a) Autoregulation of cerebral blood flow. [5]\n(b) Stepwise treatment of elevated ICP. [5]"},
-{n:16,topic:"Pulmonology",src:"Paper 2 (2023-Oct)",q:"Define brittle asthma. Discuss pathophysiology and treatment of acute severe bronchial asthma.",sub:"Definition of brittle asthma [3] + Pathophysiology [3] + Treatment [4]"},
-{n:17,topic:"Pulmonology",src:"Paper 2 (2023-Apr)",q:"Discuss risk factors, clinical features, diagnosis and treatment of pulmonary thromboembolism.",sub:"Risk factors [2] + Clinical features [3] + Diagnosis [3] + Treatment [2]"},
-{n:18,topic:"Pulmonology",src:"Paper 2 (2023-Apr)",q:"Discuss aetiology, pathophysiology, clinical features, diagnosis and treatment of hypersensitivity pneumonitis.",sub:"Aetiology [2] + Pathophysiology [2] + Clinical features [2] + Diagnosis [2] + Treatment [2]"},
-{n:19,topic:"Rheumatology",src:"Paper 2 (2022)",q:"How do you differentiate non-inflammatory from inflammatory arthritis? ACR/EULAR criteria for systemic sclerosis.",sub:"(a) Differentiate non-inflammatory vs inflammatory arthritis. [3]\n(b) ACR/EULAR criteria for systemic sclerosis. [3]\n(c) Clinical features and management of scleroderma renal crisis. [2+2]"},
-{n:20,topic:"Rheumatology",src:"Paper 2 (2024-Oct)",q:"Role of ANA in rheumatological diseases. Describe ANA patterns and CNS manifestations of SLE.",sub:"(a) Role of ANA in rheumatological diseases. [3]\n(b) ANA patterns and their interpretation. [3]\n(c) CNS manifestations of SLE. [4]"},
-{n:21,topic:"Rheumatology",src:"Paper 3 (2022)",q:"Enumerate various vasculitis syndromes. Discuss Behçet syndrome.",sub:"(a) Different vasculitis syndromes. [5]\n(b) Behçet syndrome. [5]"},
-{n:22,topic:"Rheumatology",src:"Paper 3 (2024-May)",q:"Role of ANCA in vasculitis syndrome. Classify lupus nephritis and discuss management.",sub:"(a) Role of ANCA in vasculitis syndrome. [5]\n(b) Classification of lupus nephritis and management. [5]"},
-{n:23,topic:"Rheumatology",src:"Paper 3 (2024-May)",q:"Discuss diagnosis and treatment of acute gout. Enumerate disorders associated with neuropathic joint disease.",sub:"(a) Diagnosis and treatment of acute gout. [5]\n(b) Disorders associated with neuropathic joint disease. [5]"},
-{n:24,topic:"Rheumatology",src:"Paper 2 (2025)",q:"Define antiphospholipid syndrome and enumerate types of antiphospholipid antibodies.",sub:"(a) Definition of APS + types of antiphospholipid antibodies. [2]\n(b) Pathogenesis, diagnostic criteria and management of APS. [2+3+3]"},
-{n:25,topic:"Endocrinology",src:"Paper 3 (2022)",q:"What are autoimmune polyendocrine syndromes? Discuss clinical features and diagnosis.",sub:"(a) Autoimmune polyendocrine syndromes (APS) – types. [5]\n(b) Clinical features and diagnosis. [5]"},
-{n:26,topic:"Endocrinology",src:"Paper 2 (2023-Oct)",q:"Explain how the pituitary orchestrates endocrine regulatory functions. Approach to diabetes insipidus.",sub:"(a) Pituitary gland's regulatory functions. [4]\n(b) Approach to diabetes insipidus + treatment. [3+3]"},
-{n:27,topic:"Endocrinology",src:"Paper 2 (2023-Oct)",q:"Enumerate iron overload states. Pathophysiology, diagnosis, clinical features and management of haemochromatosis.",sub:"Iron overload states [2] + Pathophysiology [2] + Diagnosis [2] + Clinical features [2] + Management [2]"},
-{n:28,topic:"Geriatrics",src:"Paper 3 (2024-Oct)",q:"Discuss frailty – definition, diagnosis, etiology and impact in the elderly.",sub:"(a) Definition of frailty + diagnosis. [2+3]\n(b) Etiology and impact of frailty in the elderly. [5]"},
-{n:29,topic:"Geriatrics",src:"Paper 1 (2024-May)",q:"What is sarcopenia? How do you measure it? Discuss malnutrition in the elderly.",sub:"(a) Sarcopenia. [2]\n(b) Measurement of sarcopenia. [3]\n(c) Malnutrition in elderly. [5]"},
-{n:30,topic:"Psychiatry",src:"Paper 3 (2022)",q:"What are post-traumatic stress disorders? Diagnosis and treatment.",sub:"(a) PTSD. [3]\n(b) Diagnosis. [4]\n(c) Treatment. [3]"},
-{n:31,topic:"Psychiatry",src:"Paper 3 (2024-Oct)",q:"Write about neuroinflammation in psychiatric disorders. Management of depressive disorders. Adverse effects of antipsychotics.",sub:"(a) Neuroinflammation in psychiatric disorders. [3]\n(b) Management of depressive disorders. [5]\n(c) Adverse effects of antipsychotic medications. [2]"},
-{n:32,topic:"Psychiatry",src:"Paper 3 (2023-Apr)",q:"Describe clinical features and diagnosis of depression. Outline treatment of a 60-year-old lady with severe depression.",sub:"Clinical features + diagnosis of depression [4+3] + Treatment [3]"},
-{n:33,topic:"Pulmonology",src:"Paper 4 (2024-Oct)",q:"Write about mechanisms of antibiotic resistance and strategies to prevent antimicrobial resistance.",sub:"(a) Mechanisms of antibiotic resistance. [5]\n(b) Strategies to prevent development of antimicrobial resistance. [5]"},
-{n:34,topic:"Nephrology",src:"Paper 2 (2025)",q:"Describe structural and molecular basis of podocyte injury in primary nephrotic syndrome.",sub:"(a) Structural and molecular basis of podocyte injury in primary nephrotic syndrome. [5]\n(b) Prognostic and therapeutic implications of podocytopathies in adults. [5]"},
-{n:35,topic:"Gastroenterology",src:"Paper 2 (2023-Apr)",q:"Enumerate causes of and discuss approach to management of a patient with haematemesis.",sub:"Causes [3] + Approach to management [7]"},
-{n:36,topic:"Gastroenterology",src:"Paper 3 (2022)",q:"What are cardiovascular abnormalities associated with CKD? Briefly describe haemodialysis.",sub:"(a) Cardiovascular abnormalities in CKD. [5]\n(b) Haemodialysis. [5]"},
-{n:37,topic:"Gastroenterology",src:"Paper 3 (2024-Oct)",q:"Discuss the approach to a patient with pancytopenia. Management of aplastic anaemia.",sub:"(a) Approach to pancytopenia. [5]\n(b) Management of Aplastic Anaemia. [5]"},
-{n:38,topic:"Infectious Disease",src:"Paper 3 (2024-Oct)",q:"Define MDR and XDR tuberculosis. Risk factors, integrated diagnosis and Bedaquiline.",sub:"(a) MDR and XDR TB definitions. [2]\n(b) Risk factors for DR-TB. [3]\n(c) Integrated diagnosis of DR-TB. [3]\n(d) Bedaquiline. [2]"},
-{n:39,topic:"Cardiology",src:"Paper 3 (2024-Oct)",q:"Approach to causes, secondary prevention and management of sudden cardiac death.",sub:"(a) Sudden cardiac death: definition, risk factors, secondary prevention. [1+2+2]\n(b) Management of in-flight medical events on commercial airlines. [5]"},
-{n:40,topic:"Cardiology",src:"Paper 2 (2023-Apr)",q:"Classify cardiomyopathies and list genetic aetiology. Differentiate them clinically.",sub:"Classification + genetic aetiology [2+1] + Evaluation [4] + Clinical differentiation [3]"},
-],
-[
-{n:1,topic:"Clinical Advances",src:"Paper 4 (2025)",q:"What is targeted nanomedicine? Describe smart drugs, nanocariiers, clinical applications, ethical issues.",sub:"(a) Targeted nanomedicine + smart drugs. [2]\n(b) Types of nano carriers + clinical applications. [2+2]\n(c) Recent advances and ethical issues in smart drug design. [2+2]"},
-{n:2,topic:"Clinical Advances",src:"Paper 4 (2023-Apr)",q:"Discuss the role of intravenous immunoglobulins in medical disorders. Recent advances in management of GBS.",sub:"(a) Role of IV immunoglobulins in medical disorders. [5]\n(b) Recent advances in management of acute inflammatory demyelinating polyneuropathy (GBS). [5]"},
-{n:3,topic:"Clinical Advances",src:"Paper 4 (2023-Apr)",q:"Discuss recent advances in management of sepsis. New antimicrobials in the development pipeline.",sub:"(a) Recent advances in management of sepsis. [5]\n(b) New antimicrobials in development pipeline – names, class, mechanism, expected activity. [5]"},
-{n:4,topic:"Clinical Advances",src:"Paper 4 (2024-Oct)",q:"Write about blood component therapy and artificial oxygen carriers.",sub:"(a) Blood component therapy. [5]\n(b) Artificial oxygen carriers. [5]"},
-{n:5,topic:"Clinical Advances",src:"Paper 4 (2024-Oct)",q:"Write about CAR-T cell therapy and biosimilar drugs.",sub:"(a) Chimeric antigen receptor (CAR) T-cell therapy. [5]\n(b) Biosimilar drugs. [5]"},
-{n:6,topic:"Clinical Advances",src:"Paper 4 (2023-Oct)",q:"Discuss stem cell transplantation strategies and application in cardiovascular and neurological disorders.",sub:"Strategies for stem cell transplantation [4] + Application in cardiovascular disorders [3] + Application in neurological disorders [3]"},
-{n:7,topic:"Clinical Advances",src:"Paper 4 (2024-May)",q:"Discuss clinical application of artificial intelligence in medicine and WHO ICOPE approach for geriatric practice.",sub:"(a) Clinical application of AI in medicine. [5]\n(b) WHO 'ICOPE' approach for geriatric practice. [5]"},
-{n:8,topic:"Clinical Advances",src:"Paper 4 (2023-Oct)",q:"What is gene therapy? Discuss application in two diseases. Potential complications.",sub:"Gene therapy definition [2] + Application in two diseases [6] + Complications [2]"},
-{n:9,topic:"Clinical Advances",src:"Paper 4 (2025)",q:"Describe classification, newer insulins, limitations of conventional insulin therapy and emerging technologies.",sub:"(a) Classification of newer insulins. [3]\n(b) Limitations of conventional insulin therapy. [3]\n(c) Clinical advantages, safety considerations and emerging technologies in insulin delivery. [4]"},
-{n:10,topic:"Clinical Advances",src:"Paper 4 (2024-Oct)",q:"Adult immunization and novel vaccine approaches in clinical medicine.",sub:"(a) Adult immunization. [5]\n(b) Novel vaccine approaches in clinical medicine. [5]"},
-{n:11,topic:"Infectious Disease",src:"Paper 4 (2025)",q:"Describe bioterrorism – biological agents, clinical features, diagnosis, prevention and public health measures.",sub:"(a) Bioterrorism + common biological agents. [3]\n(b) Clinical features and diagnosis of major bioterrorism-related infections. [3]\n(c) Prevention and control + public health preparedness. [2+2]"},
-{n:12,topic:"Infectious Disease",src:"Paper 4 (2025)",q:"Recent guidelines by NTEP and newer antituberculosis drugs with side effects.",sub:"(a) Recent NTEP guidelines. [5]\n(b) Newer antituberculosis drugs with side effects. [5]"},
-{n:13,topic:"Infectious Disease",src:"Paper 3 (2024-Oct)",q:"Discuss Graves' disease: clinical features, diagnosis and treatment.",sub:"Clinical features [4] + Diagnosis [2] + Treatment [4]"},
-{n:14,topic:"Infectious Disease",src:"Paper 4 (2023-Apr)",q:"Discuss recent updates in antiretroviral treatment (ART) under the NACP. Adverse effects of INSTI.",sub:"(a) Recent updates in ART under NACP. [5]\n(b) Adverse effects and toxicities of INSTI. [5]"},
-{n:15,topic:"Infectious Disease",src:"Paper 4 (2024-May)",q:"Current strategy for diagnosis of MDR tuberculosis and treatment regimen for TB-HIV co-infection.",sub:"(a) Current strategy for diagnosis of MDR-TB. [5]\n(b) Treatment regimen for TB in HIV patients. [5]"},
-{n:16,topic:"Toxicology",src:"Paper 2 (2024-May)",q:"Discuss the management of scorpion sting and paraquat poisoning.",sub:"(a) Management of scorpion sting. [5]\n(b) Paraquat poisoning and its management. [5]"},
-{n:17,topic:"Toxicology",src:"Paper 4 (2025)",q:"Describe classification, pathophysiology, clinical features and management of snake envenomation.",sub:"(a) Classification, pathophysiology, clinical features of snake envenomation. [5]\n(b) Principles of management including antivenom therapy. [5]"},
-{n:18,topic:"Toxicology",src:"Paper 3 (2023-Oct)",q:"Discuss heat-related disorders, clinical features and management of heat stroke.",sub:"(a) Heat-related disorders. [3]\n(b) Clinical features and management of heat stroke. [4+3]"},
-{n:19,topic:"Toxicology",src:"Paper 4 (2025)",q:"What are the major health hazards of smoking? Effects on organ systems. Pharmacological and non-pharmacological measures for nicotine de-addiction.",sub:"(a) Major health hazards of smoking. [3]\n(b) Effects on different organ systems. [3]\n(c) Pharmacological and non-pharmacological de-addiction measures. [4]"},
-{n:20,topic:"Toxicology",src:"Paper 4 (2024-May)",q:"Discuss the spectrum of e-cigarette induced illness and smoking cessation strategies.",sub:"(a) Spectrum of e-cigarette induced illness. [5]\n(b) Smoking cessation strategies. [5]"},
-{n:21,topic:"Oncology",src:"Paper 1 (2025)",q:"Describe genetic and molecular mechanisms in carcinogenesis. Role of oncogenes and tumour suppressor genes.",sub:"(a) Genetic and molecular mechanisms in carcinogenesis. [5]\n(b) Role of oncogenes and tumour suppressor genes with examples. [5]"},
-{n:22,topic:"Oncology",src:"Paper 4 (2022)",q:"What are paraneoplastic syndromes? Enumerate antibodies associated with nervous system paraneoplastic syndromes. Treatment of humoral hypercalcaemia of malignancy.",sub:"Paraneoplastic syndromes [3] + Associated antibodies [4] + Treatment of humoral hypercalcaemia [3]"},
-{n:23,topic:"Oncology",src:"Paper 3 (2025)",q:"Outline oncological emergencies. Key signs/symptoms and management principles.",sub:"(a) Oncological emergencies. [3]\n(b) Key signs/symptoms and management principles. [3+4]"},
-{n:24,topic:"Oncology",src:"Paper 4 (2025)",q:"Outline mechanism of CAR-T cell therapy. Enumerate indications, efficacy and complications in haematologic malignancies.",sub:"(a) Mechanism of CAR-T cell therapy. [5]\n(b) Indications, efficacy and complications in haematologic malignancies. [5]"},
-{n:25,topic:"Genetics",src:"Paper 1 (2025)",q:"Describe types of genetic mutations and their molecular consequences. Explain principles of next-generation sequencing.",sub:"(a) Types of genetic mutations and molecular consequences. [5]\n(b) Principles of next-generation sequencing. [5]"},
-{n:26,topic:"Metabolic",src:"Paper 3 (2023-Oct)",q:"Discuss pathophysiology of MAFLD. Prevention and treatment.",sub:"Pathophysiology of MAFLD [5] + Prevention [3] + Treatment [2]"},
-{n:27,topic:"Metabolic",src:"Paper 1 (2022)",q:"Write about pathobiology of obesity and discuss its management.",sub:"Pathobiology of obesity [5] + Management [5]"},
-{n:28,topic:"Metabolic",src:"Paper 3 (2025)",q:"Describe mechanisms of hyponatraemia in heart failure and cirrhosis. Rationale and limitations of vaptans.",sub:"(a) Mechanisms of hyponatraemia in HF and cirrhosis. [5]\n(b) Rationale and limitations of vasopressin antagonists (vaptans). [5]"},
-{n:29,topic:"Cardiology",src:"Paper 3 (2025)",q:"Define crystallopathy. Describe pathogenesis, diagnosis and management of gout.",sub:"(a) Crystallopathy + classification of crystal-induced arthritis. [5]\n(b) Pathogenesis, diagnosis and management of gout. [5]"},
-{n:30,topic:"Nephrology",src:"Paper 3 (2025)",q:"Explain immunopathologic mechanisms of anti-GBM disease. Describe plasmapheresis and immunosuppressive therapy.",sub:"(a) Immunopathologic mechanisms of anti-GBM disease. [5]\n(b) Principles and timing of plasmapheresis and immunosuppressive therapy. [5]"},
-{n:31,topic:"Cardiology",src:"Paper 1 (2025)",q:"Describe the composition and function of fecal microbiota. What is FMT and its current indications, contraindications and techniques?",sub:"(a) Composition and function of fecal microbiota. [3]\n(b) FMT – indications, contraindications. [3]\n(c) Techniques used in FMT and future perspectives. [4]"},
-{n:32,topic:"Cardiology",src:"Paper 1 (2025)",q:"What are incretins and their physiological roles? Mechanisms of action. Incretin-based therapies and recent developments.",sub:"(a) Incretins and physiological roles. [2]\n(b) Mechanisms of action. [2]\n(c) Types of incretin-based therapies. [2]\n(d) Clinical benefits and recent developments. [4]"},
-{n:33,topic:"Immunology",src:"Paper 1 (2025)",q:"Describe cellular events in acute inflammation. Role of cytokines and chemical mediators. Management of cytokine storm.",sub:"(a) Sequence of cellular events in acute inflammation. [3]\n(b) Role of cytokines and chemical mediators. [3]\n(c) Management of cytokine storm. [4]"},
-{n:34,topic:"Research",src:"Paper 3 (2022)",q:"Discuss physiology and organisation of human sleep. Define narcolepsy and write its treatment.",sub:"(a) Physiology and organisation of human sleep. [4]\n(b) Narcolepsy – definition and treatment. [6]"},
-{n:35,topic:"Research",src:"Paper 3 (2023-Apr)",q:"What is a sample size? Describe method for sample size calculation for determining prevalence of a disease.",sub:"Sample size definition + calculation method for prevalence study [complete 10-mark answer]"},
-{n:36,topic:"Research",src:"Paper 4 (2023-Oct)",q:"Discuss the role of the biological clock in human physiology. Describe circadian rhythm sleep disorders.",sub:"(a) Role of biological clock in human physiology + circadian rhythm sleep disorders. [2+3]\n(b) Case-control study – definition, applications with examples. [5]"},
-{n:37,topic:"Research",src:"Paper 4 (2022)",q:"Define metabolomics and write its clinical applications.",sub:"Definition [5] + Clinical applications [5]"},
-{n:38,topic:"Ethics & Palliative",src:"Paper 3 (2024-May)",q:"What are ethical principles? Discuss various conflicts of interest in medical profession.",sub:"(a) Ethical principles. [5]\n(b) Conflicts of interest in medical profession. [5]"},
-{n:39,topic:"Ethics & Palliative",src:"Paper 4 (2022)",q:"What is the P-SPIKES approach? Enumerate symptoms of terminally ill patients. Write about advance care planning.",sub:"(a) P-SPIKES approach. [4]\n(b) Common symptoms of terminally ill patients. [3]\n(c) Advance care planning for palliative management. [3]"},
-{n:40,topic:"Ethics & Palliative",src:"Paper 4 (2022)",q:"What are telomere spectrum disorders? Methods to measure telomere length. Clinical features of dyskeratosis congenita.",sub:"(a) Telomere spectrum disorders. [3]\n(b) Methods to measure telomere length. [2]\n(c) Clinical features of dyskeratosis congenita. [5]"},
-]
-];
-
-const setNames = ["Set 1 — Physiology & Core Medicine","Set 2 — Systems & Specialties","Set 3 — Advances & Applied"];
-const topicColors = {"Cardiology":"#185FA5","Nephrology":"#0F6E56","Endocrinology":"#BA7517","Neurology":"#533AB7","Haematology":"#A32D2D","Gastroenterology":"#3B6D11","Pulmonology":"#0F6E56","Rheumatology":"#993556","Immunology":"#994AB7","Metabolic":"#BA7517","Infectious Disease":"#993C1D","Geriatrics":"#5F5E5A","Psychiatry":"#533AB7","Toxicology":"#A32D2D","Oncology":"#185FA5","Genetics":"#3B6D11","Research":"#5F5E5A","Ethics & Palliative":"#444441","Clinical Advances":"#0F6E56"};
-let currentSet = 0;
-let reviewed = new Set();
-
-function switchSet(idx){
-  currentSet = idx;
-  reviewed = new Set();
-  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===idx));
-  document.getElementById('setlabel').textContent = setNames[idx].replace('—','·').replace('Set ','Set ')+ ' · 40 questions';
-  render();
+/* ---- SECTION SWITCHER ---- */
+function switchSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.sw-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('btn-' + id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function render(){
-  const qs = sets[currentSet];
-  const topics = [...new Set(qs.map(q=>q.topic))];
-  document.getElementById('topicbadge').textContent = topics.length + ' topics';
-  const list = document.getElementById('qlist');
+/* ---- PAPER TABS ---- */
+function openPaper(evt, paperName) {
+  document.querySelectorAll('#s2 .tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('#s2 .tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById(paperName).classList.add('active');
+  evt.currentTarget.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ---- CHECKBOX COMPLETE ---- */
+function toggleComplete(cb) {
+  cb.closest('.question-card').classList.toggle('completed', cb.checked);
+}
+
+/* ---- GAP ANALYSIS SECTION ---- */
+const topicColors = {
+  "Cardiology":      { bg: "#ebf4ff", text: "#2b6cb0", border: "#bee3f8" },
+  "Nephrology":      { bg: "#e6fffa", text: "#234e52", border: "#b2f5ea" },
+  "Neurology":       { bg: "#faf5ff", text: "#553c9a", border: "#e9d8fd" },
+  "Gastroenterology":{ bg: "#fff5f0", text: "#7b341e", border: "#fed7c3" },
+  "Endocrinology":   { bg: "#fffff0", text: "#744210", border: "#fefcbf" },
+  "Infectious":      { bg: "#f0fff4", text: "#22543d", border: "#c6f6d5" },
+  "Haematology":     { bg: "#fff5f5", text: "#742a2a", border: "#fed7d7" },
+  "Rheumatology":    { bg: "#fff0f3", text: "#702459", border: "#fbb6ce" },
+  "Pulmonology":     { bg: "#e6fffa", text: "#1d4044", border: "#b2f5ea" },
+  "Others":          { bg: "#f7fafc", text: "#4a5568", border: "#e2e8f0" },
+};
+
+const questions = [
+  {n:1,t:"Cardiology",hot:true,q:"Describe the pathophysiology and management of acute decompensated heart failure (ADHF).",sub:"(a) Define ADHF and describe the haemodynamic subtypes (wet/dry, warm/cold). [3]\n(b) Outline the stepwise pharmacological management of ADHF. [4]\n(c) Describe the indications and role of ultrafiltration in ADHF. [3]",why:"HFrEF and HFpEF have been tested but acute decompensation specifically has not — high-probability gap."},
+  {n:2,t:"Cardiology",hot:true,q:"Discuss the pathophysiology, clinical features, diagnosis and management of cardiac tamponade.",sub:"(a) Pathophysiology of cardiac tamponade including Beck's triad. [3]\n(b) Clinical features and ECG/echocardiographic findings. [3]\n(c) Management including pericardiocentesis technique and indications. [4]",why:"Pericardial disease is a consistent DNB blind spot; cardiac tamponade is the most testable sub-topic."},
+  {n:3,t:"Cardiology",hot:false,q:"Write about ambulatory blood pressure monitoring and its clinical significance. Discuss nocturnal hypertension and renovascular hypertension.",sub:"(a) Ambulatory blood pressure monitoring — technique and clinical utility. [4]\n(b) Define nocturnal hypertension and its significance. [2]\n(c) Renovascular hypertension — clinical features, diagnosis and management. [4]",why:"ABPM appeared once (Paper1 2022) as a short note only; a full 10-mark question is overdue."},
+  {n:4,t:"Cardiology",hot:true,q:"Discuss the pathophysiology, clinical features, diagnosis and treatment of constrictive pericarditis. How do you differentiate it from restrictive cardiomyopathy?",sub:"(a) Pathophysiology and causes of constrictive pericarditis. [3]\n(b) Clinical features and investigations including echo and haemodynamic criteria. [4]\n(c) Differentiation from restrictive cardiomyopathy — key clinical and investigational differences. [3]",why:"Constrictive pericarditis vs restrictive cardiomyopathy is a classic DNB viva topic never asked in this paper series."},
+  {n:5,t:"Cardiology",hot:false,q:"What are acute coronary syndromes? Discuss management and complications of ST-elevation myocardial infarction.",sub:"(a) Definition and classification of ACS. [3]\n(b) Management of STEMI — reperfusion strategies (primary PCI vs thrombolysis). [4]\n(c) Complications of STEMI and their management. [3]",why:"STEMI appeared only in Paper2 Oct-2023 — recurrence is expected given its clinical importance."},
+  {n:6,t:"Nephrology",hot:true,q:"Discuss the etiology, clinical features, diagnosis and management of rapidly progressive glomerulonephritis (RPGN).",sub:"(a) Classification and etiology of RPGN. [3]\n(b) Pathophysiology of crescent formation. [2]\n(c) Clinical features and diagnostic approach including renal biopsy. [2]\n(d) Management including immunosuppression and plasmapheresis. [3]",why:"Crescentic GN/RPGN is never asked despite anti-GBM disease and lupus nephritis being tested — major gap."},
+  {n:7,t:"Nephrology",hot:true,q:"Enumerate causes of azotemia. Discuss the diagnostic approach to the patient with polyuria.",sub:"(a) Pre-renal, renal and post-renal causes of azotemia. [5]\n(b) Diagnostic approach to polyuria — history, investigations, water deprivation test. [5]",why:"Appeared in Paper 2 (2025) but with different sub-part emphasis — worth mastering completely."},
+  {n:8,t:"Nephrology",hot:false,q:"Discuss the pathophysiology, clinical features, diagnosis and management of renal tubular acidosis.",sub:"(a) Types of RTA — classification and underlying defects. [3]\n(b) Clinical features and differentiating investigations for each type. [3]\n(c) Management of type 1 and type 4 RTA. [4]",why:"RTA appeared in Paper3 Oct-2024 — revisiting with a comprehensive management angle is likely."},
+  {n:9,t:"Nephrology",hot:true,q:"Discuss the pathophysiology, clinical features and management of cardiorenal syndrome.",sub:"(a) Define and classify the five types of cardiorenal syndrome. [3]\n(b) Pathophysiology of type 1 and type 2 cardiorenal syndrome. [4]\n(c) Management principles and novel therapies including SGLT2 inhibitors. [3]",why:"Cardiorenal syndrome is a rising exam topic, never directly asked; bridges the tested cardiology and nephrology domains."},
+  {n:10,t:"Neurology",hot:true,q:"Discuss the clinical features, diagnosis and management of status epilepticus.",sub:"(a) Define status epilepticus and its types. [2]\n(b) Pathophysiology of neuronal injury in prolonged SE. [2]\n(c) Stepwise pharmacological management — benzodiazepines to refractory SE. [4]\n(d) Monitoring and investigations during SE. [2]",why:"Epilepsy management has never appeared despite neurology being heavily tested — very high probability."},
+  {n:11,t:"Neurology",hot:true,q:"Discuss the approach to a patient with acute onset weakness. Describe the clinical differentiation between UMN and LMN lesions.",sub:"(a) Systematic approach to acute weakness — history, examination, localisation. [4]\n(b) Clinical features distinguishing UMN from LMN lesions with examples. [3]\n(c) Approach to a patient with quadriplegia — causes and initial management. [3]",why:"UMN/LMN differentiation is a fundamental exam topic that has never appeared as a full question in these papers."},
+  {n:12,t:"Neurology",hot:false,q:"Discuss the clinical features, diagnosis and management of Guillain-Barré syndrome. Write about the Miller Fisher variant.",sub:"(a) Pathogenesis and clinical features of GBS. [3]\n(b) Electrodiagnostic criteria and CSF findings. [3]\n(c) Management including IVIG and plasmapheresis. [2]\n(d) Miller Fisher variant — clinical features and antibodies. [2]",why:"GBS management appeared in P4 Apr-2023 only as part of a question — a standalone 10-mark GBS question is overdue."},
+  {n:13,t:"Neurology",hot:false,q:"Write about autoimmune encephalitis in adults. Describe its classification, diagnosis and treatment.",sub:"(a) Classification of autoimmune encephalitis — NMDAR, LGI1, CASPR2 antibodies. [3]\n(b) Clinical presentation and diagnostic criteria. [4]\n(c) Treatment approach — immunotherapy and long-term management. [3]",why:"Appeared in Paper4 Oct-2024 — likely to recur given its growing clinical relevance."},
+  {n:14,t:"Gastroenterology",hot:true,q:"Discuss the pathophysiology, clinical features, complications and management of portal hypertension.",sub:"(a) Classification and pathophysiology of portal hypertension. [3]\n(b) Clinical features and complications — varices, ascites, encephalopathy, hepatorenal syndrome. [4]\n(c) Management of acute variceal bleed — pharmacological, endoscopic and surgical options. [3]",why:"Portal hypertension as a unifying concept has never been asked, despite its sub-topics appearing separately."},
+  {n:15,t:"Gastroenterology",hot:true,q:"Discuss the pathophysiology, diagnosis and management of alcoholic liver disease.",sub:"(a) Pathogenesis of ALD — steatosis to cirrhosis; role of oxidative stress and cytokines. [5]\n(b) Diagnostic approach including scoring systems (Maddrey's discriminant function, MELD, Lille). [3]\n(c) Management including corticosteroids and pentoxifylline; role of transplantation. [2]",why:"ALD appeared in Paper3 2025 but asked for pathogenesis + scoring only — management side is completely untested."},
+  {n:16,t:"Gastroenterology",hot:false,q:"Discuss the approach to a patient with chronic diarrhoea. Classify and describe malabsorption syndromes.",sub:"(a) Systematic approach to chronic diarrhoea — osmotic vs secretory vs inflammatory. [4]\n(b) Classification of malabsorption syndromes. [3]\n(c) Diagnosis and management of coeliac disease as a prototype. [3]",why:"Stool osmotic gap appeared once (P2 May-2024) but the full chronic diarrhoea/malabsorption question is a major gap."},
+  {n:17,t:"Gastroenterology",hot:true,q:"A 50-year-old asymptomatic male was incidentally found to have a haematocrit of 54% on routine check-up. What are your possibilities and how will you evaluate him?",sub:"(a) Classification of polycythaemia — absolute vs relative, primary vs secondary. [3]\n(b) Clinical evaluation — history, examination, investigations including JAK2 mutation. [3]\n(c) Diagnosis and management of polycythaemia vera. [4]",why:"Appeared in P2 May-2024 as a clinical scenario — scenario-based questions recur with slight variation in DNB."},
+  {n:18,t:"Endocrinology",hot:true,q:"Discuss the pathophysiology, clinical features, diagnosis and treatment of primary adrenal insufficiency (Addison's disease).",sub:"(a) Causes and pathophysiology of adrenal insufficiency. [3]\n(b) Clinical features, investigations and diagnostic tests including synacthen test. [4]\n(c) Management — acute adrenal crisis and chronic glucocorticoid/mineralocorticoid replacement. [3]",why:"Adrenal disorders are a classical endocrinology topic completely absent from all 25 papers — very high gap."},
+  {n:19,t:"Endocrinology",hot:true,q:"Discuss the clinical features, diagnosis and treatment of Cushing's syndrome.",sub:"(a) Causes and pathophysiology of Cushing's syndrome — ACTH-dependent vs independent. [3]\n(b) Clinical features and screening investigations — 24h UFC, overnight DST, late night salivary cortisol. [4]\n(c) Establishing the cause — step-up testing (high dose DST, bilateral IPS sampling) and management. [3]",why:"Closely related to androgen abuse (asked Oct-2023) — Cushing's is the next logical high-probability endocrine topic."},
+  {n:20,t:"Endocrinology",hot:false,q:"Describe the clinical features, investigations and treatment of a 30-year-old woman with a large multinodular goitre.",sub:"(a) Causes and evaluation of multinodular goitre including toxic MNG. [3]\n(b) Investigations — TFT, FNAC, ultrasound, radioiodine scan. [3]\n(c) Indications for surgery, radioiodine therapy and medical management. [4]",why:"Appeared in Paper2 Apr-2023 — multinodular goitre management recurs regularly in DNB cycles."},
+  {n:21,t:"Endocrinology",hot:false,q:"Discuss the clinical features, diagnosis and treatment of pheochromocytoma.",sub:"(a) Pathogenesis and causes of pheochromocytoma including MEN syndromes and SDH mutations. [3]\n(b) Clinical features and biochemical diagnosis — plasma metanephrines, 24h urinary catecholamines. [4]\n(c) Localisation imaging, perioperative management (alpha-blockade) and surgical treatment. [3]",why:"Appeared in Paper4 Oct-2023 — pheochromocytoma recurs across DNB exam cycles."},
+  {n:22,t:"Infectious",hot:true,q:"Discuss the pathophysiology, clinical features, diagnosis and management of severe malaria.",sub:"(a) Pathophysiology of P. falciparum severe malaria — cytoadherence, sequestration, rosetting. [3]\n(b) WHO criteria for severe malaria and clinical features including cerebral malaria. [3]\n(c) Management — IV artesunate, exchange transfusion, management of complications, chemoprophylaxis. [4]",why:"Malaria is conspicuously absent from all 25 papers despite being endemic — one of the biggest gaps for Indian clinical medicine."},
+  {n:23,t:"Infectious",hot:true,q:"Discuss the pathophysiology, clinical features, diagnosis and management of typhoid fever. Write about multidrug-resistant typhoid.",sub:"(a) Pathogenesis of Salmonella typhi — intracellular survival, Peyer's patches. [3]\n(b) Clinical features, diagnosis (Widal, blood culture, PCR) and complications. [4]\n(c) Management including antibiotics; MDR typhoid and XDR typhoid — current treatment options. [3]",why:"Typhoid has not appeared in any of the 25 papers — a serious gap in a high-prevalence Indian disease."},
+  {n:24,t:"Infectious",hot:true,q:"Discuss the etiology, pathophysiology, clinical features and management of community-acquired pneumonia (CAP). Write about CURB-65 scoring.",sub:"(a) Microbiology and pathophysiology of CAP — typical vs atypical pathogens. [3]\n(b) Clinical features, diagnosis and CURB-65 severity scoring. [3]\n(c) Antibiotic selection based on severity and setting; management of atypical pneumonia. [4]",why:"CAP/pneumonia is a core medicine topic completely absent from all papers — very high probability gap."},
+  {n:25,t:"Infectious",hot:false,q:"Discuss the etiopathogenesis, clinical features, diagnosis and management of infective endocarditis. How do you identify high-risk groups?",sub:"(a) Pathogenesis and microbiology of IE — HACEK organisms, culture-negative IE. [2]\n(b) Duke criteria — major and minor criteria; clinical features. [4]\n(c) Antibiotic regimens (empirical and organism-specific) and surgical indications. [4]",why:"IE appeared in P2 Oct-2024 focused only on right-sided IE — a full comprehensive IE question is substantially different."},
+  {n:26,t:"Haematology",hot:true,q:"Classify plasma cell disorders. Discuss the clinical features, diagnosis and management of multiple myeloma.",sub:"(a) Classification of plasma cell disorders — MGUS, SMM, MM, Waldenstrom's. [2]\n(b) Clinical features, CRAB criteria and myeloma-defining events. [2]\n(c) Diagnosis — SPEP, UPEP, serum FLC, bone marrow biopsy and PET-CT. [3]\n(d) Management — novel agents (bortezomib, lenalidomide, daratumumab), ASCT and maintenance. [3]",why:"Multiple myeloma appeared in P3 Oct-2023 and P3 May-2024 — a comprehensive question covering newer agents is very likely."},
+  {n:27,t:"Haematology",hot:true,q:"Discuss the pathogenesis, clinical features, diagnosis and management of chronic myeloid leukaemia (CML).",sub:"(a) Pathogenesis — BCR-ABL fusion, Philadelphia chromosome and downstream signalling. [3]\n(b) Clinical features and phase classification (chronic, accelerated, blast crisis). [3]\n(c) Management — imatinib and second/third-generation TKIs; monitoring (PCR); indications for HSCT. [4]",why:"CML and chronic leukaemias have never appeared in any of these 25 papers — an enormous haematology gap."},
+  {n:28,t:"Haematology",hot:false,q:"Discuss the classification, clinical features and management of haemolytic anaemias.",sub:"(a) Classification — inherited vs acquired, intravascular vs extravascular haemolysis. [5]\n(b) Autoimmune haemolytic anaemia — warm vs cold type, DAT, management. [5]",why:"Appeared in P2 May-2024 — haemolysis is a recurring exam domain likely to come again in this cycle."},
+  {n:29,t:"Rheumatology",hot:true,q:"Discuss the pathogenesis, clinical features, diagnosis and management of systemic sclerosis.",sub:"(a) Pathogenesis — fibrosis, vasculopathy, autoimmunity; anti-Scl-70 and anti-centromere antibodies. [3]\n(b) ACR/EULAR criteria, clinical features and organ involvement — skin, lung, heart, kidney, GI. [3]\n(c) Management of specific complications: SSc-ILD (nintedanib), scleroderma renal crisis, Raynaud's, PAH. [4]",why:"Systemic sclerosis appeared in P2 Oct-2023 covering only pathophysiology/diagnosis — comprehensive management is untested."},
+  {n:30,t:"Rheumatology",hot:false,q:"Define and classify spondyloarthritis. Discuss the diagnosis and management of ankylosing spondylitis including biologic agents.",sub:"(a) Classification of spondyloarthritis and pathogenic role of HLA-B27. [2+2]\n(b) Clinical features, modified New York criteria, and investigations (MRI sacroiliac joints). [3]\n(c) Management — NSAIDs, sulfasalazine, TNF inhibitors (adalimumab, etanercept), IL-17 inhibitors. [3]",why:"AS with biologic agents appeared in Paper2 2025 — management updates with newer biologics recur in DNB."},
+  {n:31,t:"Pulmonology",hot:true,q:"Discuss the pathophysiology, clinical features, diagnosis and management of pulmonary arterial hypertension (PAH).",sub:"(a) Classification of PH (Nice/WHO 5-group classification) and pathophysiology of PAH. [3]\n(b) Clinical features, investigations and diagnostic right heart catheterisation (mPAP criteria). [4]\n(c) Management — ERA (bosentan, ambrisentan), PDE5i (sildenafil), prostacyclins; role of transplantation. [3]",why:"PAH has never appeared in any of the 25 papers — a serious gap given its clinical and exam importance."},
+  {n:32,t:"Pulmonology",hot:false,q:"Discuss the approach to a patient with dyspnoea. Describe the endocrine functions of the lung.",sub:"(a) Approach to acute and chronic dyspnoea — systematic workup, MRC scale, investigations. [5]\n(b) Endocrine functions of the lung — ACE, prostacyclin, serotonin metabolism, peptide secretion. [5]",why:"Endocrine functions of the lung appeared in P4 Oct-2024; dyspnoea approach in P2 2022 — combined DNB-style question."},
+  {n:33,t:"Others",hot:true,q:"Discuss the pathophysiology, clinical features, diagnosis and management of systemic lupus erythematosus (SLE).",sub:"(a) Pathogenesis — loss of tolerance, immune complex deposition, complement activation, NET formation. [3]\n(b) Clinical features by system and ACR/EULAR 2019 classification criteria. [3]\n(c) Management — antimalarials (HCQ), steroids, immunosuppressants (MMF, azathioprine); role of belimumab and anifrolumab. [4]",why:"SLE appeared in Paper3 2025 as a brief component — a full comprehensive SLE question is very likely next."},
+  {n:34,t:"Others",hot:true,q:"Discuss the clinical features, diagnosis and management of alcohol dependence syndrome.",sub:"(a) Pathophysiology of alcohol dependence, AUDIT score and CAGE criteria. [3]\n(b) Alcohol withdrawal — clinical features, CIWA-Ar scale, management with benzodiazepines. [3]\n(c) Pharmacological management — disulfiram, acamprosate, naltrexone; Wernicke-Korsakoff syndrome prevention. [4]",why:"Alcohol dependence appeared in P3 Apr-2023 — psychoactive substance disorders are a recurring Paper3 theme."},
+  {n:35,t:"Others",hot:false,q:"How will you approach a middle-aged person with complaint of tingling and numbness of both lower limbs of 3 months duration?",sub:"(a) Systematic approach — sensory pathways, anatomical localisation, relevant history. [4]\n(b) Causes at different levels — peripheral nerve, posterior column, spinal cord. [3]\n(c) Investigations and management of the most common causes (B12 deficiency, DM, hypothyroidism). [3]",why:"Appeared in P1 May-2024 as a clinical scenario — sensory localisation scenarios recur in DNB."},
+  {n:36,t:"Others",hot:true,q:"Discuss the role of Bayes' theorem in clinical diagnosis. How do you assess the quality of healthcare? Write about Randomised Controlled Trials.",sub:"(a) Bayes' theorem — pre-test probability, likelihood ratio, post-test probability with a worked example. [4]\n(b) Tools for assessment of healthcare quality — Donabedian model (structure, process, outcome). [3]\n(c) Randomised controlled trials — design, randomisation, blinding, strengths and limitations. [3]",why:"Bayes' rule appeared in P4 May-2024 and RCT in P1 May-2024 — combining them is DNB Paper4's typical pattern."},
+  {n:37,t:"Others",hot:false,q:"Discuss the pathophysiology, clinical features and management of capillary leak syndrome.",sub:"(a) Pathophysiology — vascular permeability, endothelial dysfunction, triggers. [3]\n(b) Clinical features of idiopathic systemic capillary leak syndrome (Clarkson disease) — triphasic course. [3]\n(c) Management — acute phase (IVIG, methylxanthines, vasopressors) and prevention of recurrence. [4]",why:"Appeared in P1 Apr-2023 — rare but memorable; DNB re-tests uncommon but high-yield conditions."},
+  {n:38,t:"Others",hot:true,q:"Discuss the approach to a patient in coma. Outline the established criteria for brain death.",sub:"(a) Systematic approach to coma — GCS, AVPU scale, structural vs metabolic causes. [4]\n(b) Aetiopathogenesis of coma. [3]\n(c) Brain death — clinical criteria, confirmatory tests and legal/ethical aspects of declaration in India. [3]",why:"Appeared in P2 Oct-2023 — coma and brain death is a recurrent topic across DNB cycles."},
+  {n:39,t:"Others",hot:false,q:"Describe the different types of renal replacement therapy. Discuss the advantages and disadvantages of each modality.",sub:"(a) Types of RRT — IHD, CRRT (CVVH, CVVHDF), SLED, peritoneal dialysis. [3]\n(b) Principles, advantages and disadvantages of each modality. [4]\n(c) Choosing the modality in specific clinical settings — haemodynamically unstable, poisoning, AKI. [3]",why:"Appeared in P3 Apr-2023 — RRT comparisons recur as Paper3-style questions in alternate cycles."},
+  {n:40,t:"Others",hot:true,q:"Discuss the pathophysiology and management of cytokine storm. Write about cytokine release syndrome in CAR-T cell therapy.",sub:"(a) Pathophysiology of cytokine storm — triggers, mediators (IL-6, IFN-γ, TNF-α), organ damage cascade. [3]\n(b) Clinical features, laboratory findings and diagnostic criteria (HScore). [3]\n(c) Management — corticosteroids, tocilizumab, ruxolitinib; Lee grading of CRS in CAR-T and specific management. [4]",why:"Cytokine storm appeared in P4 Apr-2023 and P1 2025 — the CAR-T CRS angle adds novelty for Paper4's innovation focus."},
+];
+
+const allTopics = ['All', ...Object.keys(topicColors)];
+let currentFilter = 'All';
+let reviewed = new Set();
+
+function buildFilters() {
+  const wrap = document.getElementById('filters');
+  allTopics.forEach(t => {
+    const b = document.createElement('button');
+    b.className = 'fbtn' + (t === 'All' ? ' active' : '');
+    b.textContent = t === 'All' ? 'All 40' : t;
+    b.onclick = () => {
+      currentFilter = t;
+      wrap.querySelectorAll('.fbtn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      render();
+    };
+    wrap.appendChild(b);
+  });
+}
+
+function render() {
+  const list = document.getElementById('ql');
   list.innerHTML = '';
-  qs.forEach((q,i)=>{
+  const filtered = currentFilter === 'All' ? questions : questions.filter(q => q.t === currentFilter);
+  const doneInView = filtered.filter(q => reviewed.has(q.n)).length;
+  const pct = filtered.length > 0 ? Math.round((doneInView / filtered.length) * 100) : 0;
+  document.getElementById('pf').style.width = pct + '%';
+  document.getElementById('pt').textContent = doneInView + ' / ' + filtered.length + ' reviewed';
+
+  filtered.forEach(q => {
+    const c = topicColors[q.t] || topicColors['Others'];
     const card = document.createElement('div');
-    card.className = 'qcard';
-    card.id = 'q'+i;
-    const color = topicColors[q.topic]||'#5F5E5A';
-    card.innerHTML = `<i class="ti ti-chevron-down chevron" aria-hidden="true"></i>
-      <div class="qnum">Q${q.n} <span style="display:inline-block;padding:1px 8px;border-radius:4px;font-size:10px;background:${color}20;color:${color};margin-left:4px">${q.topic}</span></div>
-      <div class="qtext">${q.q}</div>
-      <div class="qsub" style="white-space:pre-wrap">${q.sub}</div>
-      <div class="qsource"><i class="ti ti-file-text" style="font-size:12px;vertical-align:-1px;margin-right:3px" aria-hidden="true"></i>${q.src}</div>`;
-    card.onclick = ()=>{
-      const wasExpanded = card.classList.contains('expanded');
-      card.classList.toggle('expanded');
-      if(!wasExpanded){ reviewed.add(i); updateProgress(); }
+    card.className = 'qcard' + (reviewed.has(q.n) ? ' open' : '');
+    card.innerHTML = `
+      <div class="qcard-top">
+        <div class="qcard-left">
+          <div class="qmeta">
+            <span class="qnum">Q${q.n}</span>
+            <span class="qtag" style="background:${c.bg};color:${c.text};border:1px solid ${c.border}">${q.t}</span>
+            ${q.hot ? '<span class="qhot">🔥 likely</span>' : ''}
+          </div>
+          <div class="qtext">${q.q}</div>
+        </div>
+        <span class="chev">&#8964;</span>
+      </div>
+      <div class="qbody">
+        <div class="qsub">${q.sub}</div>
+        <div class="qwhy">
+          <span class="qwhy-icon">&#9432;</span>
+          <span>${q.why}</span>
+        </div>
+      </div>`;
+    card.onclick = () => {
+      const wasOpen = card.classList.contains('open');
+      card.classList.toggle('open');
+      if (!wasOpen) {
+        reviewed.add(q.n);
+        const done2 = filtered.filter(x => reviewed.has(x.n)).length;
+        document.getElementById('pf').style.width = Math.round((done2/filtered.length)*100) + '%';
+        document.getElementById('pt').textContent = done2 + ' / ' + filtered.length + ' reviewed';
+      }
     };
     list.appendChild(card);
   });
-  updateProgress();
 }
 
-function updateProgress(){
-  const total = sets[currentSet].length;
-  const done = reviewed.size;
-  const pct = Math.round((done/total)*100);
-  document.getElementById('pfill').style.width = pct+'%';
-  document.getElementById('ptext').textContent = done + ' / ' + total + ' reviewed';
-}
-
+buildFilters();
 render();
+
+/* ============================================================
+   SET 3 — Pattern-based predictions
+   ============================================================ */
+const s3TopicColors = {
+  "Cardiology":      { bg: "#ebf4ff", text: "#2b6cb0", border: "#bee3f8" },
+  "Neurology":       { bg: "#faf5ff", text: "#553c9a", border: "#e9d8fd" },
+  "Endocrinology":   { bg: "#fffff0", text: "#744210", border: "#fefcbf" },
+  "Nephrology":      { bg: "#e6fffa", text: "#234e52", border: "#b2f5ea" },
+  "Rheumatology":    { bg: "#fff0f3", text: "#702459", border: "#fbb6ce" },
+  "GI / Hepatology": { bg: "#fff5f0", text: "#7b341e", border: "#fed7c3" },
+  "Infections":      { bg: "#f0fff4", text: "#22543d", border: "#c6f6d5" },
+  "Haematology":     { bg: "#fff5f5", text: "#742a2a", border: "#fed7d7" },
+  "Basic Science":   { bg: "#f7fafc", text: "#4a5568", border: "#e2e8f0" },
+  "Recent Advances": { bg: "#fef3c7", text: "#92400e", border: "#fde68a" },
+};
+
+const s3Questions = [
+  {n:1,t:"Cardiology",hot:true,paper:"P1/P3",freq:95,q:"Describe the Frank–Starling mechanism and its clinical relevance in HFrEF. Outline the four pillars of goal-directed medical therapy (GDMT) for HFrEF and their mechanisms of action.",sub:"(a) Frank–Starling mechanism — length-tension relationship, preload, afterload, contractility. Clinical relevance in acute decompensation. [5]\n(b) Four pillars of GDMT: ACEi/ARNi, beta-blocker, MRA, SGLT2i — mechanisms, mortality benefit, titration. [5]",why:"Heart failure physiology + management is a perennial P1/P3 topic. Frank-Starling was specifically asked in 2025 (P1). Combining physiology with GDMT makes this a very probable unseen angle."},
+  {n:2,t:"Cardiology",hot:true,paper:"P1/P4",freq:90,q:"Classify ventricular arrhythmias and explain the re-entry mechanism with a diagram. Discuss acute and long-term management of ventricular tachycardia including indications for ICD.",sub:"(a) Classification of ventricular arrhythmias — PVCs, NSVT, sustained VT, VF. Re-entry mechanism diagram. [2+3]\n(b) Acute management: DC cardioversion, amiodarone. Long-term: catheter ablation, ICD indications (primary/secondary prevention). [5]",why:"Ventricular arrhythmias + ICD appeared in P1 2022 and P4 2022 separately — a combined question is the next logical step."},
+  {n:3,t:"Cardiology",hot:true,paper:"P1/P3/P4",freq:88,q:"Define hypertriglyceridaemia and outline its genetic and secondary causes. Describe the role of PCSK9 inhibitors in dyslipidaemia — mechanism, indications, and clinical trial evidence.",sub:"(a) Define hypertriglyceridaemia; classify by fasting TG levels. Genetic (familial hypertriglyceridaemia, LPL deficiency) and secondary causes — molecular mechanisms. [5]\n(b) PCSK9 inhibitors: mechanism of LDL-R upregulation; evolocumab/alirocumab; FOURIER/ODYSSEY trials; indications and current place in therapy. [5]",why:"Hypertriglyceridaemia appeared in P1 2025. PCSK9i appeared in P3 Oct-2024 and P4 2024. A combined lipids question bridging these is very high probability."},
+  {n:4,t:"Cardiology",hot:false,paper:"P2",freq:75,q:"Discuss the causes, pathogenesis, diagnosis and management of dilated cardiomyopathy.",sub:"(a) Causes: genetic, viral, alcoholic, peripartum, tachycardia-induced, idiopathic. [3]\n(b) Pathogenesis — neurohormonal activation, myocyte loss, adverse remodelling. [2]\n(c) Diagnosis: echo criteria, endomyocardial biopsy. Management: GDMT, CRT, ICD, transplantation. [2+3]",why:"Dilated cardiomyopathy appeared in P2 2022 — it is a recurring cardiology anchor topic across cycles."},
+  {n:5,t:"Cardiology",hot:true,paper:"P1/P4",freq:85,q:"Define atrial fibrillation and describe its electrophysiological basis and causes. Outline a stepwise management strategy — rate vs rhythm control, anticoagulation, and role of pulsed field ablation.",sub:"(a) Definition, electrophysiology of AF — pulmonary vein triggers, multiple wavelet hypothesis; causes. [2+3]\n(b) Rate control drugs; rhythm control — cardioversion, flecainide, amiodarone. CHA₂DS₂-VASc score; NOACs. Pulsed field ablation as recent advance. [3+2]",why:"AF management appeared in P1 2022 and P4 Oct-2024. Pulsed field ablation was introduced in P4 2024 — a comprehensive combined question is expected next."},
+  {n:6,t:"Cardiology",hot:false,paper:"P3",freq:70,q:"Write a note on Takotsubo cardiomyopathy — pathophysiology, clinical features, diagnosis and management. Discuss viral myocarditis — aetiology, diagnosis and management.",sub:"(a) Takotsubo: catecholamine surge, apical ballooning, Mayo criteria, ECG/echo findings, management and prognosis. [5]\n(b) Viral myocarditis: aetiology (Coxsackie, parvovirus B19, SARS-CoV-2), endomyocardial biopsy, CMR, management including immunosuppression. [5]",why:"Both appeared together in P3 of the most recent (2025) paper — patterns suggest this pairing will be tested again."},
+  {n:7,t:"Neurology",hot:true,paper:"P1/P3",freq:88,q:"Enumerate the ICHD-3 classification of headache disorders. Outline a systematic diagnostic approach to new-onset headache including red-flag features, initial investigations and management of raised ICP.",sub:"(a) ICHD-3 classification: primary (migraine, TTH, cluster) vs secondary headaches. [2]\n(b) Red-flag features (SNOOP4 mnemonic). Initial investigations: CT/MRI, LP. [4]\n(c) Stepwise management of raised ICP — head positioning, osmotherapy, CSF drainage, decompressive craniectomy. [4]",why:"Headache classification appeared in P1 May-2024. Raised ICP management in P1 May-2024. ICHD-3 classification appeared in P3 2025. A unified question is highly probable."},
+  {n:8,t:"Neurology",hot:true,paper:"P3",freq:90,q:"Discuss management of acute ischaemic stroke including thrombolysis criteria and mechanical thrombectomy. Outline strategies to prevent recurrence of ischaemic stroke.",sub:"(a) Acute management: IV alteplase (NIHSS criteria, time window, contraindications); mechanical thrombectomy (large vessel occlusion, ASPECTS score, extended window). [5]\n(b) Secondary prevention: antiplatelet therapy, anticoagulation for AF, BP control, statin therapy, CEA/carotid stenting criteria. [5]",why:"Stroke management appeared in P3 Oct-2024 — one of the most recurrent neurology topics across all DNB cycles."},
+  {n:9,t:"Neurology",hot:false,paper:"P2",freq:72,q:"Discuss the clinical features, diagnosis, differential diagnosis and treatment of myasthenia gravis including classification and role of thymectomy.",sub:"(a) Osserman classification; pathogenesis — AChR antibodies, NMJ physiology. Clinical features and crises. [2+2]\n(b) Diagnosis: Tensilon test, repetitive nerve stimulation, SFEMG, anti-AChR/anti-MuSK antibodies. [2]\n(c) Management: pyridostigmine, steroids, immunosuppressants, IVIG, plasmapheresis, thymectomy indications. [4]",why:"Appeared in full in P2 2022 — MG recurs in alternate cycles; the thymectomy angle adds a surgical dimension."},
+  {n:10,t:"Neurology",hot:true,paper:"P3/P4",freq:82,q:"Describe etiopathogenesis, clinical features and red-flag signs of Parkinson's disease. Discuss drug-induced Parkinsonism — causes, differentiation from idiopathic PD, and management.",sub:"(a) Etiopathogenesis: α-synuclein, Lewy bodies, dopaminergic pathway loss. Cardinal features (TRAP), non-motor features, red flags for atypical parkinsonism. [5]\n(b) Drug-induced Parkinsonism: offending drugs (antipsychotics, metoclopramide), differentiation from IPD (symmetry, drug history, DaT scan), management (drug withdrawal, anticholinergics). [5]",why:"Parkinsonism appeared in P3 Oct-2023 and P4 Oct-2024. Drug-induced Parkinsonism is a frequently tested combined angle."},
+  {n:11,t:"Neurology",hot:false,paper:"P1",freq:65,q:"Draw and label a detailed cross-section of the midbrain at the level of the superior colliculus. Describe the clinical features of major midbrain stroke syndromes.",sub:"(a) Labelled diagram: cerebral peduncles, red nucleus, substantia nigra, oculomotor nucleus, MLF, PAG, decussation of superior cerebellar peduncle. [5]\n(b) Weber syndrome (CN III + hemiplegia); Benedict syndrome (CN III + contralateral tremor/ataxia); Parinaud syndrome (dorsal midbrain). Clinical features and localisation. [5]",why:"Appeared in the 2025 P1 paper — diagram questions on neuroanatomy recur; midbrain syndromes are a high-yield clinical topic."},
+  {n:12,t:"Endocrinology",hot:true,paper:"P1",freq:92,q:"Classify diabetes mellitus. Describe the pathophysiology, clinical features and management of hyperosmolar hyperglycaemic state (HHS).",sub:"(a) WHO classification of DM — Type 1, Type 2, MODY, secondary, gestational DM; diagnostic criteria. [3]\n(b) HHS: pathophysiology (relative insulin deficiency, extreme hyperglycaemia, severe dehydration without significant ketosis). Clinical features, diagnosis, osmolality calculation. [3]\n(c) Management: IV fluids (normal saline protocol), insulin (delayed start), electrolyte replacement, anticoagulation, monitoring. [4]",why:"DM classification + HHS appeared in P1 2022. DM management is tested in almost every exam cycle — the HHS angle is the most likely unseen sub-topic."},
+  {n:13,t:"Endocrinology",hot:true,paper:"P1/P2/P4",freq:95,q:"What are incretins? Describe their physiological roles and mechanism of action. Enumerate incretin-based therapies including novel dual and triple agonists and their recent clinical developments.",sub:"(a) Incretins: GIP and GLP-1 — physiological roles, release, and L-cell/K-cell biology. [2]\n(b) Mechanism: GLP-1R agonism — insulin secretion, glucagon suppression, gastric emptying, weight loss. [2]\n(c) Incretin-based therapies: DPP-4i, GLP-1 RA (semaglutide, liraglutide), GLP-1/GIP dual agonist (tirzepatide), GLP-1/GIP/GCG triple agonist (retatrutide). Recent cardiovascular outcome trials (LEADER, SUSTAIN-6, SURPASS). [4+2]",why:"Incretin therapy appeared in P2 2024, P1 2025, P2 2022. The triple agonist angle is a new addition for the 2026 cycle."},
+  {n:14,t:"Endocrinology",hot:true,paper:"P3",freq:80,q:"Describe the pathophysiology, clinical features and diagnostic criteria of acromegaly. Outline diagnostic tests and current management options.",sub:"(a) Pathophysiology: GH excess → IGF-1 → somatic growth, metabolic effects. Clinical features: acral enlargement, facial changes, organomegaly, CVS/resp complications. [5]\n(b) Diagnosis: oral glucose tolerance test (failure of GH suppression), IGF-1, MRI pituitary. Management: transsphenoidal surgery (first-line), somatostatin analogues (octreotide, lanreotide), pegvisomant, radiotherapy. [5]",why:"Acromegaly appeared in P3 2025 — pituitary tumour questions recur in alternate sessions."},
+  {n:15,t:"Endocrinology",hot:false,paper:"P2/P1",freq:75,q:"Discuss the pathophysiology of osteoporosis. Describe management of steroid-induced osteoporosis including FRAX scoring and pharmacotherapy. Outline bone remodelling physiology.",sub:"(a) Bone remodelling: RANK/RANKL/OPG pathway, osteoblast/osteoclast coupling. [3]\n(b) Pathophysiology of osteoporosis — oestrogen deficiency, immobilisation, secondary causes. [2]\n(c) Steroid-induced osteoporosis: FRAX score, calcium/vitamin D, bisphosphonates, teriparatide, romosozumab; monitoring with DXA. [5]",why:"Osteoporosis appeared in P2 May-2024 and P1 Oct-2023. Steroid-induced variant with newer agents (romosozumab) is an untested angle."},
+  {n:16,t:"Endocrinology",hot:false,paper:"P1",freq:60,q:"Discuss testosterone transport and metabolism. Describe your approach to a case of gynaecomastia.",sub:"(a) Testosterone synthesis, transport (SHBG, albumin), peripheral metabolism (DHT, aromatisation to oestradiol). [5]\n(b) Approach to gynaecomastia: physiological vs pathological; causes (hypogonadism, hyperprolactinaemia, liver disease, drugs); investigations and management. [5]",why:"Appeared directly in P1 2022 — testosterone metabolism is a recurrent endocrine physiology question."},
+  {n:17,t:"Endocrinology",hot:false,paper:"P4",freq:68,q:"Classify newer insulins and describe limitations of conventional insulin therapy. Discuss clinical advantages, safety considerations, and emerging technologies in insulin delivery.",sub:"(a) Classification: ultra-rapid (faster aspart, lispro-aabc), basal (degludec, glargine U-300), co-formulations. Limitations of conventional therapy: hypoglycaemia, weight gain, injection burden. [3+3]\n(b) Advantages of newer insulins; closed-loop systems (artificial pancreas); smart insulin pens; biosensor-integrated delivery. Safety considerations. [4]",why:"Appeared in P4 2025 (most recent paper) — novel insulin technologies are a high-probability Paper 4 repeat topic."},
+  {n:18,t:"Nephrology",hot:true,paper:"P2/P4",freq:84,q:"Discuss the pathophysiology of ischaemic acute kidney injury. Enumerate novel biomarkers of AKI. Discuss complications of peritoneal dialysis and management of refractory ascites.",sub:"(a) Ischaemic AKI pathophysiology: tubular necrosis, vascular autoregulation failure, inflammatory cascade. [4]\n(b) Novel AKI biomarkers: NGAL, KIM-1, IL-18, cystatin C, L-FABP — comparison with creatinine. [3]\n(c) Complications of PD: peritonitis, ultrafiltration failure, exit-site infection. Refractory ascites: TIPS, repeated paracentesis, albumin infusion. [3]",why:"AKI biomarkers appeared in P2 May-2024. Peritoneal dialysis complications in P4 2022. Refractory ascites in P4 2022. A unified renal/GI question is a likely Paper 3 pattern."},
+  {n:19,t:"Nephrology",hot:false,paper:"P2",freq:65,q:"Describe structural and molecular basis of podocyte injury in primary nephrotic syndrome. Discuss prognostic and therapeutic implications of podocytopathies in adults.",sub:"(a) Podocyte structure: slit diaphragm proteins (nephrin, podocin, CD2AP); mechanisms of injury — immune, genetic, toxic. [5]\n(b) Podocytopathies: MCD (complete recovery), FSGS (variable); targeted therapies — rituximab, abatacept, sparsentan for FSGS; monitoring with podocyturia. [5]",why:"Appeared in P2 2025 — podocyte biology is a new exam theme that will likely be re-tested with a management focus."},
+  {n:20,t:"Nephrology",hot:false,paper:"P3",freq:60,q:"Explain the immunopathologic mechanisms of anti-GBM disease. Describe principles and timing of plasmapheresis and immunosuppressive therapy.",sub:"(a) Anti-GBM disease: linear IgG deposition, Goodpasture antigen (α3 chain of type IV collagen), T-cell and B-cell mechanisms. Pulmonary-renal syndrome. [5]\n(b) Treatment: plasmapheresis (urgent, to remove circulating antibodies); cyclophosphamide + prednisolone; timing relative to dialysis dependence and pulmonary haemorrhage; monitoring anti-GBM titres. [5]",why:"Appeared in P3 2025 — a recently introduced topic likely to recur with a deeper mechanistic focus."},
+  {n:21,t:"Nephrology",hot:false,paper:"P3",freq:65,q:"Describe the etiology and diagnosis of renal tubular acidosis. Outline the treatment approach for each type.",sub:"(a) Types of RTA: Type 1 (distal, H+ secretion defect), Type 2 (proximal, HCO₃ wasting), Type 4 (hyperkalaemic, aldosterone deficiency/resistance). Etiology and distinguishing investigations. [2+3]\n(b) Treatment: Type 1 — sodium bicarbonate/citrate, potassium citrate; Type 2 — bicarbonate (large doses); Type 4 — fludrocortisone or treat underlying cause. [5]",why:"RTA appeared in P3 Oct-2024 — a comprehensive treatment-focused question is the natural follow-up."},
+  {n:22,t:"Rheumatology",hot:true,paper:"P2",freq:80,q:"Describe the ACR/EULAR classification criteria for systemic sclerosis. Discuss the clinical features and management of scleroderma renal crisis.",sub:"(a) ACR/EULAR 2013 criteria: skin thickening, fingertip lesions, telangiectasia, SSc-related antibodies, ILD, PAH, Raynaud's — scoring. [4]\n(b) Scleroderma renal crisis: acute severe hypertension, MAHA, oliguric AKI. Management: ACE inhibitors (drug of choice), dialysis if needed, avoidance of high-dose steroids. [3+3]",why:"Systemic sclerosis classification appeared in P2 Oct-2023. Scleroderma renal crisis is the classic management question that was only partially covered — a comprehensive question is due."},
+  {n:23,t:"Rheumatology",hot:true,paper:"P2/P3",freq:85,q:"Outline the pathogenesis of ANCA-associated vasculitis. Describe the diagnostic evaluation and treatment principles of granulomatosis with polyangiitis (GPA/Wegener's).",sub:"(a) ANCA pathogenesis: neutrophil priming, ANCA-induced degranulation, endothelial injury, complement amplification loop (alternative pathway). [3]\n(b) GPA: upper and lower respiratory tract + renal involvement. cANCA/PR3-ANCA. Tissue biopsy (necrotising granulomatous vasculitis). Management: cyclophosphamide + rituximab induction; azathioprine/rituximab maintenance; avacopan (complement C5a inhibitor). [3+4]",why:"ANCA vasculitis appeared in P2 2025 and P3 Oct-2023. Avacopan is a new addition that examiners are likely to ask about."},
+  {n:24,t:"Rheumatology",hot:true,paper:"P3",freq:88,q:"Define crystallopathy and classify crystal-induced arthritis. Describe the pathogenesis, diagnosis and management of gout as a prototype crystallopathy.",sub:"(a) Crystal-induced arthritis: monosodium urate (gout), calcium pyrophosphate (pseudogout), basic calcium phosphate. Mechanisms of crystal-induced inflammation (NLRP3 inflammasome, IL-1β). [5]\n(b) Gout: hyperuricaemia causes; acute attack — colchicine, NSAIDs, steroids; prophylaxis and urate-lowering therapy (allopurinol, febuxostat); role of SGLT2 inhibitors; indications for pegloticase. [5]",why:"Gout appeared in P3 Oct-2023 and P3 2025. The NLRP3 inflammasome and SGLT2 inhibitor angle adds a modern dimension not previously tested."},
+  {n:25,t:"Rheumatology",hot:false,paper:"P2",freq:72,q:"Define antiphospholipid syndrome and enumerate types of antiphospholipid antibodies. Describe pathogenesis, diagnostic criteria and management of APS.",sub:"(a) Definition; antibodies: lupus anticoagulant, anti-cardiolipin IgG/IgM, anti-β2GPI IgG/IgM. [2]\n(b) Pathogenesis: thrombosis mechanism, complement activation, obstetric APS. [2]\n(c) Revised Sapporo (Sydney) criteria. Management: warfarin (therapeutic INR), aspirin, hydroxychloroquine; catastrophic APS management. [3+3]",why:"APS appeared in P2 2025. Catastrophic APS and the role of direct oral anticoagulants is an untested management sub-topic."},
+  {n:26,t:"GI / Hepatology",hot:true,paper:"P3/P4",freq:90,q:"Describe the differences between ulcerative colitis and Crohn's disease. Enumerate extra-intestinal manifestations of IBD. Discuss treatment of severe UC and novel drugs for IBD.",sub:"(a) UC vs Crohn's: distribution, histology (goblet cell depletion vs transmural granulomas), endoscopic/radiological differences. [4]\n(b) Extra-intestinal manifestations: joints, eyes, skin, liver (PSC), biliary. [2]\n(c) Severe UC: IV steroids, cyclosporine, infliximab rescue therapy; novel drugs: ustekinumab, vedolizumab, ozanimod, tofacitinib. [2+2]",why:"IBD differences appeared in P3 2022. Severe UC treatment appeared in P4 Oct-2024. Novel IBD drugs is a Paper 4 trend topic."},
+  {n:27,t:"GI / Hepatology",hot:false,paper:"P3",freq:68,q:"Describe the pathogenesis of alcoholic liver disease. Outline diagnostic approach and prognostic scoring systems. Discuss management including corticosteroids.",sub:"(a) Pathogenesis: alcohol metabolism → acetaldehyde, oxidative stress, gut dysbiosis, TNF-α, Kupffer cell activation → steatosis → steatohepatitis → cirrhosis. [4]\n(b) Diagnostic approach: history, LFT pattern, USS, liver biopsy if needed. Scoring: Maddrey's discriminant function, ABIC score, MELD, Lille model. [3]\n(c) Management of acute alcoholic hepatitis: prednisolone (MDF ≥32), Lille score at 7 days; pentoxifylline (limited role); N-acetylcysteine; transplantation criteria. [3]",why:"ALD pathogenesis + scoring appeared in P3 2025. Management was not asked — a combined question covering all three aspects is very likely next."},
+  {n:28,t:"GI / Hepatology",hot:true,paper:"P1",freq:88,q:"Describe the composition and function of the fecal microbiota. Discuss FMT — indications, contraindications, techniques and future perspectives.",sub:"(a) Gut microbiota: composition (Firmicutes, Bacteroidetes, Proteobacteria), functions (digestion, immunity, SCFA production, gut-brain axis). [3]\n(b) FMT: current indications (recurrent C. difficile — primary indication; IBD, IBS — investigational); contraindications; donor screening; delivery methods (colonoscopy, capsule, nasojejunal); future (washed microbiota transplantation, defined microbial consortia). [3+4]",why:"FMT appeared in P1 Oct-2023 and P1 2025. Gut microbiome is a recurrent basic science theme for Paper 1."},
+  {n:29,t:"GI / Hepatology",hot:false,paper:"P2",freq:72,q:"Describe evaluation and management of massive haematemesis. Discuss management of chronic hepatitis B including new antiviral endpoints.",sub:"(a) Massive haematemesis: initial stabilisation, Blatchford score, OGD (band ligation, sclerotherapy, Sengstaken-Blakemore tube); TIPS; surgical options. [5]\n(b) Chronic hepatitis B: natural history, HBeAg/anti-HBe seroconversion; treatment endpoints (functional cure — HBsAg loss); antivirals (tenofovir, entecavir); new therapies (siRNA, capsid assembly modulators, checkpoint inhibitors); indications for treatment. [5]",why:"Hepatitis B management appeared in P2 May-2024. New HBV cure strategies are a rapidly evolving high-yield topic."},
+  {n:30,t:"Infections",hot:true,paper:"P3",freq:80,q:"Discuss risk factors, clinical features, diagnosis and treatment of mucormycosis.",sub:"(a) Risk factors: diabetic ketoacidosis, prolonged neutropenia, corticosteroid use, COVID-19-associated mucormycosis (CAM). [2]\n(b) Clinical features by form: rhinocerebral (most common), pulmonary, cutaneous, disseminated. Diagnosis: tissue biopsy with KOH — broad aseptate ribbon-like hyphae; CT orbit/brain/sinuses. [3]\n(c) Treatment: liposomal amphotericin B; surgical debridement; posaconazole/isavuconazole step-down; management of underlying predisposing condition. [3] Newer approaches: iron chelation, combination therapy. [2]",why:"Mucormycosis appeared in P3 Oct-2023. CAM-associated mucormycosis is a high-profile topic in India and likely to recur."},
+  {n:31,t:"Infections",hot:true,paper:"P3/P4",freq:92,q:"Define MDR-TB and XDR-TB. Outline risk factors and integrated diagnosis of drug-resistant TB. Write about bedaquiline and delamanid.",sub:"(a) Definitions: MDR-TB (resistant to rifampicin + INH), pre-XDR, XDR-TB (WHO 2021 revised definition). Risk factors for DR-TB. [2+3]\n(b) Diagnosis: Xpert MTB/RIF Ultra, LPA (FL and SL), phenotypic DST; whole genome sequencing. CBNAAT algorithm. [3]\n(c) Bedaquiline: diarylquinoline, ATP synthase inhibitor, bactericidal; side effects (QTc prolongation); delamanid: nitroimidazole, mycolic acid synthesis inhibitor. BPaLM regimen (Bedaquiline + Pretomanid + Linezolid + Moxifloxacin). [2]",why:"MDR-TB appeared in P3 Oct-2024, P4 Oct-2024, and P4 2025 — one of the highest-frequency topics across all papers. BPaLM was introduced in the 2022 paper."},
+  {n:32,t:"Infections",hot:true,paper:"P3/P4",freq:88,q:"Discuss recent updates in antiretroviral treatment under NACP. Describe mechanism of action and toxicities of integrase strand transfer inhibitors (INSTIs).",sub:"(a) NACP 2024 updates: preferred first-line regimen (TDF + 3TC + DTG); second-line options; switch strategy for virological failure. [5]\n(b) INSTIs: dolutegravir, bictegravir, cabotegravir — mechanism (integrase strand transfer inhibition, binding to active site Mg²⁺); toxicities (neural tube defects, weight gain, insomnia, hypersensitivity). Drug-drug interactions. Long-acting injectable cabotegravir. [5]",why:"HIV/ART appeared in P3 2024, P4 Oct-2024, and P4 2025. DTG-based regimen updates and INSTI toxicities are the highest-yield current topics."},
+  {n:33,t:"Infections",hot:false,paper:"P2",freq:68,q:"Describe the etiopathogenesis and clinical features of leptospirosis. Write about scoring systems and management.",sub:"(a) Etiopathogenesis: Leptospira interrogans, spirochaete invasion, vasculitis, endothelial damage. Weil's disease — jaundice, AKI, haemorrhage. [5]\n(b) Scoring: Faine's criteria (clinical + epidemiological + laboratory); modified WHO criteria. Management: mild — doxycycline; severe — IV penicillin G or ceftriaxone; supportive care (dialysis, ventilation for pulmonary haemorrhage syndrome). [5]",why:"Leptospirosis appeared in P2 2025 — tropical infections including leptospirosis are recurrent in the post-monsoon exam cycle."},
+  {n:34,t:"Haematology",hot:true,paper:"P2",freq:82,q:"Describe the differential diagnosis and approach to generalised lymphadenopathy. Enumerate differences between Hodgkin's and non-Hodgkin's lymphoma. Outline WHO classification of Hodgkin's lymphoma.",sub:"(a) Approach to lymphadenopathy: history (duration, systemic symptoms, risk factors), examination (size, consistency, site), investigations (CBC, LDH, ESR, CT, PET-CT, lymph node biopsy). Differential: reactive, lymphoma, metastatic, granulomatous. [4]\n(b) HL vs NHL: differences in age, EBV association, cell of origin, spread pattern, prognosis. [3]\n(c) WHO classification of HL: classical HL (NSHL, MCHL, LDHL, LRHL) and NLPHL; pathological hallmark (Reed-Sternberg cells — CD15+, CD30+). [3]",why:"Appeared in P2 2025. Lymphoma classification is a recurring haematology topic that is rarely asked twice in the same form."},
+  {n:35,t:"Haematology",hot:false,paper:"P3",freq:65,q:"Outline oncological emergencies — key signs, symptoms and management principles of each.",sub:"(a) Classification: metabolic (hypercalcaemia, TLS, SIADH, ectopic ACTH); haematological (febrile neutropenia, DIC, hyperviscosity); structural/obstructive (SVC syndrome, cord compression, cardiac tamponade, raised ICP). [3]\n(b) Key features and management: TLS — allopurinol/rasburicase, IV fluids; hypercalcaemia — zoledronic acid, denosumab; febrile neutropenia — empirical broad-spectrum antibiotics (Tazobactam-piperacillin ± amikacin); SVC syndrome — steroids, radiotherapy/stenting. [4+3]",why:"Oncological emergencies appeared in P3 2025 — a comprehensive question covering all categories is the natural follow-up."},
+  {n:36,t:"Basic Science",hot:true,paper:"P1",freq:85,q:"Describe genetic and molecular mechanisms of carcinogenesis. Discuss the role of oncogenes and tumour suppressor genes with examples.",sub:"(a) Carcinogenesis mechanisms: point mutations, chromosomal translocations, gene amplification, epigenetic silencing. Hallmarks of cancer (Hanahan & Weinberg). [5]\n(b) Oncogenes: RAS (KRAS in colorectal/pancreatic), HER2, MYC. Tumour suppressor genes: TP53 (guardian of genome), RB1 (retinoblastoma), BRCA1/2, APC. Two-hit hypothesis. [5]",why:"Molecular oncology appeared in P1 2025. This is a core Paper 1 basic science topic that recurs in every second cycle."},
+  {n:37,t:"Basic Science",hot:false,paper:"P1",freq:72,q:"Classify hypersensitivity reactions with examples. Describe the immunopathogenesis of type III hypersensitivity and its clinical relevance.",sub:"(a) Gell-Coombs classification: Type I (IgE-mediated, anaphylaxis), Type II (cytotoxic, haemolytic anaemia), Type III (immune complex, SLE/serum sickness), Type IV (cell-mediated, TB/contact dermatitis). [5]\n(b) Type III: immune complex deposition → complement activation → neutrophil recruitment → tissue damage. Clinical examples: SLE, rheumatoid arthritis, post-streptococcal GN, serum sickness, vasculitis. [5]",why:"Appeared in P1 2025 — immunology is a consistent Paper 1 basic science domain."},
+  {n:38,t:"Basic Science",hot:true,paper:"P1",freq:80,q:"Describe the sequence of cellular events and chemical mediators in acute inflammation. Discuss how to manage cytokine storm.",sub:"(a) Acute inflammation events: vasodilation, increased permeability, neutrophil margination → rolling → adhesion (selectins, integrins) → migration → phagocytosis. Chemical mediators: histamine, prostaglandins, leukotrienes, complement, cytokines (TNF-α, IL-1, IL-6). [6]\n(b) Cytokine storm: triggers (sepsis, CAR-T CRS, macrophage activation syndrome). Management: corticosteroids, tocilizumab (IL-6 blocker), ruxolitinib (JAKi), anakinra (IL-1 blocker); CRS grading (ASTCT criteria). [4]",why:"Inflammation appeared in P1 2025. Cytokine storm management appeared in P4 Apr-2023. Combining both in one P1 question is a logical exam evolution."},
+  {n:39,t:"Recent Advances",hot:true,paper:"P4",freq:85,q:"Discuss CAR T-cell therapy — mechanism, indications, complications and current clinical evidence. Write about biosimilar drugs — definition, regulatory considerations and clinical applications.",sub:"(a) CAR T-cell therapy: structure of CAR (VH+VL scFv + signalling domains); manufacturing; approved products (tisagenlecleucel, axicabtagene); indications (ALL, DLBCL, MM); CRS and ICANS management. [5]\n(b) Biosimilars: definition (similar to reference biologic in quality, safety, efficacy); regulatory pathway (EMA/CDSCO); interchangeability; clinical applications (adalimumab biosimilars, filgrastim, trastuzumab biosimilars). [5]",why:"CAR-T + biosimilars appeared together in P4 Oct-2024. This combined question structure is typical of Paper 4's innovation focus."},
+  {n:40,t:"Recent Advances",hot:false,paper:"P4",freq:78,q:"Describe the role of artificial intelligence in clinical medicine. Discuss targeted nanomedicine — smart drugs, nanocarrier types, clinical applications and ethical issues.",sub:"(a) AI in medicine: diagnostic imaging (radiology, pathology AI), clinical decision support systems, drug discovery, EHR analysis, genomics. Limitations: bias, interpretability, regulatory challenges. [5]\n(b) Nanomedicine: targeted drug delivery using liposomes, polymeric nanoparticles, dendrimers, carbon nanotubes; smart drugs (stimuli-responsive release — pH, enzyme, light); clinical applications (liposomal doxorubicin, nab-paclitaxel, mRNA-LNP vaccines); ethical issues (equity, nanotoxicology, consent). [5]",why:"AI in medicine appeared in P4 Oct-2024 and P4 2025 (multiple papers). Nanomedicine appeared in P4 2025. Both are flagship Paper 4 topics for this exam cycle."},
+];
+
+const s3AllTopics = ['All', ...Object.keys(s3TopicColors)];
+let s3CurrentFilter = 'All';
+let s3Reviewed = new Set();
+
+function buildFilters3() {
+  const wrap = document.getElementById('filters3');
+  s3AllTopics.forEach(t => {
+    const b = document.createElement('button');
+    b.className = 'fbtn' + (t === 'All' ? ' active' : '');
+    b.textContent = t === 'All' ? 'All 40' : t;
+    b.onclick = () => {
+      s3CurrentFilter = t;
+      wrap.querySelectorAll('.fbtn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      render3();
+    };
+    wrap.appendChild(b);
+  });
+}
+
+function render3() {
+  const list = document.getElementById('ql3');
+  list.innerHTML = '';
+  const filtered = s3CurrentFilter === 'All' ? s3Questions : s3Questions.filter(q => q.t === s3CurrentFilter);
+  const doneInView = filtered.filter(q => s3Reviewed.has(q.n)).length;
+  const pct = filtered.length > 0 ? Math.round((doneInView / filtered.length) * 100) : 0;
+  document.getElementById('pf3').style.width = pct + '%';
+  document.getElementById('pt3').textContent = doneInView + ' / ' + filtered.length + ' reviewed';
+
+  filtered.forEach(q => {
+    const c = s3TopicColors[q.t] || s3TopicColors['Basic Science'];
+    const card = document.createElement('div');
+    card.className = 'qcard' + (s3Reviewed.has(q.n) ? ' open' : '');
+    card.innerHTML = `
+      <div class="qcard-top">
+        <div class="qcard-left">
+          <div class="qmeta">
+            <span class="qnum">Q${q.n}</span>
+            <span class="qtag" style="background:${c.bg};color:${c.text};border:1px solid ${c.border}">${q.t}</span>
+            ${q.hot ? '<span class="qhot">🔥 likely</span>' : ''}
+            <span class="qtag" style="background:#f7fafc;color:#718096;border:1px solid #e2e8f0;font-size:9px">${q.paper}</span>
+            <span class="qtag" style="background:#f0fff4;color:#276749;border:1px solid #c6f6d5;font-size:9px">freq ${q.freq}%</span>
+          </div>
+          <div class="qtext">${q.q}</div>
+        </div>
+        <span class="chev">&#8964;</span>
+      </div>
+      <div class="qbody">
+        <div class="qsub">${q.sub}</div>
+        <div class="qwhy">
+          <span class="qwhy-icon">&#9432;</span>
+          <span>${q.why}</span>
+        </div>
+      </div>`;
+    card.onclick = () => {
+      const wasOpen = card.classList.contains('open');
+      card.classList.toggle('open');
+      if (!wasOpen) {
+        s3Reviewed.add(q.n);
+        const done2 = filtered.filter(x => s3Reviewed.has(x.n)).length;
+        document.getElementById('pf3').style.width = Math.round((done2/filtered.length)*100) + '%';
+        document.getElementById('pt3').textContent = done2 + ' / ' + filtered.length + ' reviewed';
+      }
+    };
+    list.appendChild(card);
+  });
+}
+
+buildFilters3();
+render3();
 </script>
+</body>
+</html>
